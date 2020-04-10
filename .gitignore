@@ -127,3 +127,8 @@ hs_err_pid*
 .history
 
 # End of https://www.gitignore.io/api/intellij,java,visualstudiocode
+/.idea/.name
+/.idea/compiler.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
