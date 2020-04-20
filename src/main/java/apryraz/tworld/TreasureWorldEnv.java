@@ -81,7 +81,7 @@ public class TreasureWorldEnv {
             ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "");
 
         } else if (msg.getComp(0).equals("treasureup")) {
-            ans = new AMessage("treasurefoundup", msg.getComp(1), msg.getComp(2), "");
+            ans = new AMessage("yes", msg.getComp(1), msg.getComp(2), "");
 
         }
         // YOU MUST ANSWER ALSO TO THE OTHER MESSAGE TYPES:

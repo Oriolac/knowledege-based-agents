@@ -285,11 +285,27 @@ public class TreasureFinder {
      **/
     public void processDetectorSensorAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException {
-
         int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
+        int s = Integer.parseInt((ans.getComp(3)));
         String detects = ans.getComp(0);
-
+        if (detects.equals("detectedsat")) {
+            if (s == 1) {
+                int[] vect = {enumerator.getLiteralSensor1(x, y)};
+                solver.addClause(new VecInt(vect));
+                //TODO
+            } else if (s == 2) {
+                int[] vect = {enumerator.getLiteralSensor2(x, y)};
+                solver.addClause(new VecInt(vect));
+                //TODO
+            } else if (s == 3) {
+                int[] vect = {enumerator.getLiteralSensor3(x, y)};
+                solver.addClause(new VecInt(vect));
+                //TODO
+            } else {
+                //TODO: quan el detector retorna 0
+            }
+        }
         // Call your function/functions to add the evidence clauses
         // to Gamma to then be able to infer new NOT possible positions
 
@@ -325,7 +341,7 @@ public class TreasureFinder {
             solver.addClause(new VecInt(vect));
             addPirateDownClauses();
 
-        }else if (isup.equals("no")) {
+        }else {
             int[] vect = {enumerator.getLiteralDown(x,y)};
             solver.addClause(new VecInt(vect));
             addPirateUpClauses();
