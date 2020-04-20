@@ -4,13 +4,16 @@ public class LiteralEnumerator {
 
     private final int WorldDim;
     private final int WorldLinealDim;
+    static public final int PAST = -1;
+    static public final int FUTURE = 1;
+
 
     public LiteralEnumerator(int worldDim) {
         this.WorldDim = worldDim;
         this.WorldLinealDim = worldDim * worldDim;
     }
 
-    public int getLiteralSize() {
+    public int getNumClauses() {
         return (2 + 4 + 1 + 1) * this.WorldLinealDim;
     }
 
@@ -50,15 +53,19 @@ public class LiteralEnumerator {
     }
 
     public int getEnumeratePosition(int x, int y) {
-        return (x - 1) * this.WorldDim + y;
+        return (y - 1) * this.WorldDim + x;
     }
 
     public int getLiteralTPosition(int x, int y, int t) {
-        if (t == -1) {
+        if (t == PAST) {
             return getEnumeratePosition(x, y);
         } else {
             return this.WorldLinealDim + getEnumeratePosition(x, y);
         }
+    }
+
+    public int getLiteralTPosition(Position position, int t) {
+        return getLiteralTPosition(position.getX(), position.getY(), t);
     }
 
     public int getLiteralDown(int x, int y) {

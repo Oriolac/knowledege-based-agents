@@ -6,6 +6,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -39,9 +40,11 @@ public class TreasureWorld {
         TAgent.setEnvironment(EnvAgent);
         // load list of steps into the Finder Agent
         TAgent.loadListOfSteps(numSteps, fileSteps);
-
-
         // Execute sequence of steps with the Agent
+        List<Position> positions = TAgent.getListOfSteps();
+        for(Position position: positions) {
+            TAgent.runNextStep();
+        }
 
     }
 

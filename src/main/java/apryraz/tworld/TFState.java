@@ -1,5 +1,7 @@
 package apryraz.tworld;
 
+import java.awt.*;
+
 public class TFState {
     /**
      *
@@ -23,8 +25,11 @@ public class TFState {
     }
 
     public void set(int i, int j, String val) {
-
         matrix[i - 1][j - 1] = val;
+    }
+
+    public void set(Position position, String val) {
+        set(position.getX(), position.getY(), val);
     }
 
     public boolean equals(Object obj) {

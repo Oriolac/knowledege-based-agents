@@ -55,10 +55,16 @@ public class TreasureFinder {
      **/
     ISolver solver;
     /**
-     * Agent position in the world and variable to record if there is a pirate
+     * Variable to record if there is a pirate
      * at that current position
      **/
-    int agentX, agentY, pirateFound;
+    int pirateFound;
+
+    /**
+     * Agent position in the world.
+     */
+    Position currentPosition;
+
     /**
      * Dimension of the world and total size of the world (Dim^2)
      **/
@@ -112,7 +118,6 @@ public class TreasureFinder {
      * @param environment the Environment object
      **/
     public void setEnvironment(TreasureWorldEnv environment) {
-
         EnvAgent = environment;
     }
 
@@ -245,10 +250,11 @@ public class TreasureFinder {
      **/
     public void processMoveAnswer(AMessage moveans) {
         if (moveans.getComp(0).equals("movedto")) {
-            agentX = Integer.parseInt(moveans.getComp(1));
-            agentY = Integer.parseInt(moveans.getComp(2));
+            int x = Integer.parseInt(moveans.getComp(1));
+            int y = Integer.parseInt(moveans.getComp(2));
+            currentPosition = new Position(x, y);
             pirateFound = Integer.parseInt(moveans.getComp(3));
-            System.out.println("FINDER => moved to : (" + agentX + "," + agentY + ")" + " Pirate found : " + pirateFound);
+            System.out.println("FINDER => moved to : (" + currentPosition.getX() + "," + currentPosition.getY() + ")" + " Pirate found : " + pirateFound);
         }
     }
 
@@ -261,10 +267,10 @@ public class TreasureFinder {
     public AMessage DetectsAt() {
         AMessage msg, ans;
 
-        msg = new AMessage("detectsat", (new Integer(agentX)).toString(),
-                (new Integer(agentY)).toString(), "");
+        msg = new AMessage("detectsat", String.valueOf(currentPosition.getX()),
+                String.valueOf(currentPosition.getY()), "");
         ans = EnvAgent.acceptMessage(msg);
-        System.out.println("FINDER => detecting at : (" + agentX + "," + agentY + ")");
+        System.out.println("FINDER => detecting at : (" + currentPosition.getX() + "," + currentPosition.getY() + ")");
         return ans;
     }
 
@@ -300,14 +306,14 @@ public class TreasureFinder {
     public AMessage IsTreasureUpOrDown() {
         AMessage msg, ans;
 
-        msg = new AMessage("treasureup", (new Integer(agentX)).toString(),
-                (new Integer(agentY)).toString(), "");
+        msg = new AMessage("treasureup", String.valueOf(currentPosition.getX()),
+                String.valueOf(currentPosition.getY()), "");
         ans = EnvAgent.acceptMessage(msg);
-        System.out.println("FINDER => checking treasure up of : (" + agentX + "," + agentY + ")");
+        System.out.println("FINDER => checking treasure up of : (" + currentPosition.getX() + "," + currentPosition.getY() + ")");
         return ans;
     }
 
-    public processPirateAnswer(AMessage ans) throws
+    public void processPirateAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException {
 
         int y = Integer.parseInt(ans.getComp(2));
@@ -350,9 +356,9 @@ public class TreasureFinder {
             ContradictionException, TimeoutException {
         // EXAMPLE code to check this for position (2,3):
         // Get variable number for position 2,3 in past variables
-        int linealIndex = coordToLineal(2, 3, TreasureFutureOffset);
+        int linealIndex = enumerator.getLiteralTPosition(currentPosition,  LiteralEnumerator.FUTURE);
         // Get the same variable, but in the past subset
-        int linealIndexPast = coordToLineal(2, 3, TreasurePastOffset);
+        int linealIndexPast = enumerator.getLiteralTPosition(currentPosition, LiteralEnumerator.PAST);
 
         VecInt variablePositive = new VecInt();
         variablePositive.insertFirst(linealIndex);
@@ -365,7 +371,7 @@ public class TreasureFinder {
             concPast.insertFirst(-(linealIndexPast));
 
             futureToPast.add(concPast);
-            tfstate.set(2, 3, "X");
+            tfstate.set(currentPosition, "X");
         }
 
     }
@@ -378,7 +384,7 @@ public class TreasureFinder {
      **/
     public ISolver buildGamma() throws UnsupportedEncodingException,
             FileNotFoundException, IOException, ContradictionException {
-        int totalNumVariables = enumerator.getLiteralSize();
+        int totalNumVariables = enumerator.getNumClauses();
 
         // You must set this variable to the total number of boolean variables
         // in your formula Gamma
@@ -389,12 +395,24 @@ public class TreasureFinder {
         // This variable is used to generate, in a particular sequential order,
         // the variable indentifiers of all the variables
         actualLiteral = 1;
+        addMemorableClauses();
         addSensorClauses();
         addPirateClauses();
         // call here functions to add the differen sets of clauses
         // of Gamma to the solver object
 
+
         return solver;
+    }
+
+    private void addMemorableClauses() throws ContradictionException {
+        for(int x = 0; x < this.WorldDim; x++) {
+            for (int y = 0; y < this.WorldDim; y++) {
+                int[] vect = {-enumerator.getLiteralTPosition(x, y, LiteralEnumerator.PAST),
+                        -enumerator.getLiteralTPosition(x,y, LiteralEnumerator.FUTURE)};
+                solver.addClause(new VecInt(vect));
+            }
+        }
     }
 
     private void addPirateClauses() throws ContradictionException {
@@ -538,9 +556,7 @@ public class TreasureFinder {
         }
     }
 
-
-
-
-
-
+    public ArrayList<Position> getListOfSteps() {
+        return listOfSteps;
+    }
 }

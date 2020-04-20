@@ -1,7 +1,5 @@
 package apryraz.tworld;
 
-import javafx.util.Pair;
-
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +10,7 @@ public class TreasureWorldEnv {
      * X,Y position of Treasure and world dimension
      **/
     int TreasureX, TreasureY, WorldDim;
-    List<Pair<Integer, Integer>> pirateLocations;
+    List<Position> pirateLocations;
 
 
     /**
@@ -50,7 +48,7 @@ public class TreasureWorldEnv {
         while (strtok.hasMoreTokens()) {
             int x = Integer.parseInt(strtok.nextToken());
             int y = Integer.parseInt(strtok.nextToken());
-            pirateLocations.add(new Pair<>(x, y));
+            pirateLocations.add(new Position(x, y));
         }
     }
 
@@ -96,8 +94,8 @@ public class TreasureWorldEnv {
      * @return 1  if (x,y) contains a pirate, 0 otherwise
      **/
     public int isPirateInMyCell(int x, int y) {
-        for (Pair<Integer, Integer> location: pirateLocations) {
-            if( x == location.getKey() && y == location.getValue())
+        for (Position position: pirateLocations) {
+            if( position.equals(new Position(x, y)))
                 return 1;
         }
         return 0;
