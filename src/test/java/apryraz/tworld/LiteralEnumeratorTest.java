@@ -49,23 +49,23 @@ public class LiteralEnumeratorTest {
 
     @Test
     public void getLiteralDown() {
-        assertEquals(WORLD_LINEAL_DIM * 6 + 1, enumerator.getLiteralSensor2(1, 1));
-        assertEquals(WORLD_LINEAL_DIM * 6 + 2, enumerator.getLiteralSensor2(2, 1));
-        assertEquals(WORLD_LINEAL_DIM * 6 + 5, enumerator.getLiteralSensor2(1, 2));
+        assertEquals(WORLD_LINEAL_DIM * 6 + 1, enumerator.getLiteralDown(1, 1));
+        assertEquals(WORLD_LINEAL_DIM * 6 + 2, enumerator.getLiteralDown(2, 1));
+        assertEquals(WORLD_LINEAL_DIM * 6 + 5, enumerator.getLiteralDown(1, 2));
     }
 
     @Test
     public void getLiteralUp() {
-        assertEquals(WORLD_LINEAL_DIM * 5 + 1, enumerator.getLiteralSensor2(1, 1));
-        assertEquals(WORLD_LINEAL_DIM * 5 + 2, enumerator.getLiteralSensor2(2, 1));
-        assertEquals(WORLD_LINEAL_DIM * 5 + 5, enumerator.getLiteralSensor2(1, 2));
+        assertEquals(WORLD_LINEAL_DIM * 5 + 1, enumerator.getLiteralUp(1, 1));
+        assertEquals(WORLD_LINEAL_DIM * 5 + 2, enumerator.getLiteralUp(2, 1));
+        assertEquals(WORLD_LINEAL_DIM * 5 + 5, enumerator.getLiteralUp(1, 2));
     }
 
     @Test
     public void getLiteralSensor3() {
-        assertEquals(WORLD_LINEAL_DIM * 4 + 1, enumerator.getLiteralSensor2(1, 1));
-        assertEquals(WORLD_LINEAL_DIM * 4 + 2, enumerator.getLiteralSensor2(2, 1));
-        assertEquals(WORLD_LINEAL_DIM * 4 + 5, enumerator.getLiteralSensor2(1, 2));
+        assertEquals(WORLD_LINEAL_DIM * 4 + 1, enumerator.getLiteralSensor3(1, 1));
+        assertEquals(WORLD_LINEAL_DIM * 4 + 2, enumerator.getLiteralSensor3(2, 1));
+        assertEquals(WORLD_LINEAL_DIM * 4 + 5, enumerator.getLiteralSensor3(1, 2));
     }
 
     @Test
