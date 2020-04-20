@@ -1,4 +1,4 @@
-package apryraz.tworld;
+package apryraz.tworld.data;
 
 /**
  * Class for representing messages exchanged between agents and the

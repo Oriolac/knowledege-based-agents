@@ -1,9 +1,10 @@
-package apryraz.tworld;
+package apryraz.tworld.data;
 
-import org.junit.Before;
-import org.junit.Test;
+import apryraz.tworld.data.LiteralEnumerator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LiteralEnumeratorTest {
 
@@ -11,7 +12,7 @@ public class LiteralEnumeratorTest {
     private static final int WORLD_LINEAL_DIM = WORLD_DIM * WORLD_DIM;
     LiteralEnumerator enumerator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         enumerator = new LiteralEnumerator(WORLD_DIM);
     }

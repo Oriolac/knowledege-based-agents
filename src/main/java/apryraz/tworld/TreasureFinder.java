@@ -4,6 +4,8 @@ import apryraz.tworld.clauses.ClauseBuilder;
 import apryraz.tworld.clauses.Sensor1Builder;
 import apryraz.tworld.clauses.Sensor2Builder;
 import apryraz.tworld.clauses.Sensor3Builder;
+import apryraz.tworld.data.AMessage;
+import apryraz.tworld.data.LiteralEnumerator;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -189,7 +191,7 @@ public class TreasureFinder {
         // If a pirate was found at new agent position, ask question to
         // pirate and process Answer to discover new information
         if (pirateFound == 1) {
-            processPirateAnswer(IsTreasureUpOrDown());
+            processPirateAnswer(isTreasureUpOrDown());
         }
 
         // Perform logical consequence questions for all the positions
@@ -213,7 +215,7 @@ public class TreasureFinder {
         if (idNextStep < numMovements) {
             nextPosition = listOfSteps.get(idNextStep);
             idNextStep = idNextStep + 1;
-            return moveTo(nextPosition.x, nextPosition.y);
+            return moveTo(nextPosition.getX(), nextPosition.getY());
         } else {
             System.out.println("NO MORE steps to perform at agent!");
             return (new AMessage("NOMESSAGE", "", "", ""));
@@ -303,7 +305,7 @@ public class TreasureFinder {
      *
      * @return return the answer given by the pirate
      **/
-    public AMessage IsTreasureUpOrDown() {
+    public AMessage isTreasureUpOrDown() {
         AMessage msg, ans;
 
         msg = new AMessage("treasureup", String.valueOf(currentPosition.getX()),
@@ -466,7 +468,6 @@ public class TreasureFinder {
                             int[] vect = {-enumerator.getLiteralSensor3(x, y), -enumerator.getLiteralTPosition(i, j, 1)};
                             solver.addClause(new VecInt(vect));
                         }
-
                     }
                 }
             }

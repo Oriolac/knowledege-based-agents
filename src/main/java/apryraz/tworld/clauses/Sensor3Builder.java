@@ -1,6 +1,6 @@
 package apryraz.tworld.clauses;
 
-import apryraz.tworld.LiteralEnumerator;
+import apryraz.tworld.data.LiteralEnumerator;
 import org.sat4j.core.VecInt;
 
 public class Sensor3Builder implements ClauseBuilder {

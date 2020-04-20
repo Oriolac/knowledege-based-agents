@@ -1,9 +1,7 @@
 package apryraz.tworld.clauses;
 
-import apryraz.tworld.LiteralEnumerator;
+import apryraz.tworld.data.LiteralEnumerator;
 import org.sat4j.core.VecInt;
-import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.ISolver;
 
 public class Sensor1Builder implements ClauseBuilder {
 
@@ -15,7 +13,9 @@ public class Sensor1Builder implements ClauseBuilder {
     }
 
     @Override
-    public VecInt addClause(int x, int y, int i, int j) {
+    public VecInt addClause(int x, int y, int i, int j) throws UnsupportedOperationException {
+        if (x != i || y != j)
+            throw new UnsupportedOperationException();
         int[] vect = {-en.getLiteralSensor1(x, y), -en.getLiteralTPosition(i, j, 1)};
         return new VecInt(vect);
     }

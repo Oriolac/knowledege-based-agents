@@ -1,4 +1,6 @@
-package apryraz.tworld;
+package apryraz.tworld.data;
+
+import apryraz.tworld.Position;
 
 public class LiteralEnumerator {
 

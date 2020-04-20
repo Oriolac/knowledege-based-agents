@@ -1,16 +1,16 @@
 package apryraz.tworld;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class TFStateTest {
 
     private int wDim;
     private TFState state;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         wDim = 4;
         state = new TFState(wDim);
