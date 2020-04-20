@@ -289,18 +289,18 @@ public class TreasureFinder {
             IOException, ContradictionException, TimeoutException {
         int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
-        int s = Integer.parseInt((ans.getComp(3)));
+        int value = Integer.parseInt((ans.getComp(3)));
         String detects = ans.getComp(0);
         if (detects.equals("detectedsat")) {
-            if (s == 1) {
+            if (value == 1) {
                 int[] vect = {enumerator.getLiteralSensor1(x, y)};
                 solver.addClause(new VecInt(vect));
                 //TODO
-            } else if (s == 2) {
+            } else if (value == 2) {
                 int[] vect = {enumerator.getLiteralSensor2(x, y)};
                 solver.addClause(new VecInt(vect));
                 //TODO
-            } else if (s == 3) {
+            } else if (value == 3) {
                 int[] vect = {enumerator.getLiteralSensor3(x, y)};
                 solver.addClause(new VecInt(vect));
                 //TODO
