@@ -490,48 +490,48 @@ public class TreasureFinder {
         }
     }
 
-    private void addSensorClauseDown(ISolver solver, int limit, ClauseBuilder constr) throws ContradictionException {
+    private void addSensorClauseDown(ISolver solver, int limit, ClauseBuilder clauseBuilder) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = 0; i < this.WorldDim; i++) {
                     for (int j = 0; j < y - limit; j++) {
-                        solver.addClause(constr.addClause(x, y, i, j));
+                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
                     }
                 }
             }
         }
     }
 
-    private void addSensorClauseUp(ISolver solver, int start, ClauseBuilder constr) throws ContradictionException {
+    private void addSensorClauseUp(ISolver solver, int start, ClauseBuilder clauseBuilder) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = 0; i < this.WorldDim; i++) {
                     for (int j = y + start; j < this.WorldDim; j++) {
-                        solver.addClause(constr.addClause(x, y, i, j));
+                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
                     }
                 }
             }
         }
     }
 
-    private void addSensorClauseLeft(ISolver solver, int limit, ClauseBuilder constr) throws ContradictionException {
+    private void addSensorClauseLeft(ISolver solver, int limit, ClauseBuilder clauseBuilder) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = 0; i < x - limit; i++) {
                     for (int j = 0; j < this.WorldDim; j++) {
-                        solver.addClause(constr.addClause(x, y, i, j));
+                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
                     }
                 }
             }
         }
     }
 
-    private void addSensorClauseRight(ISolver solver, int start, ClauseBuilder constr) throws ContradictionException {
+    private void addSensorClauseRight(ISolver solver, int start, ClauseBuilder clauseBuilder) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = x + start; i < this.WorldDim; i++) {
                     for (int j = 0; j < this.WorldDim; j++) {
-                        solver.addClause(constr.addClause(x, y, i, j));
+                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
                     }
                 }
             }
@@ -539,40 +539,8 @@ public class TreasureFinder {
     }
 
 
-    /**
-     * Convert a coordinate pair (x,y) to the integer value  t_[x,y]
-     * of variable that stores that information in the formula, using
-     * offset as the initial index for that subset of position variables
-     * (past and future position variables have different variables, so different
-     * offset values)
-     *
-     * @param x      x coordinate of the position variable to encode
-     * @param y      y coordinate of the position variable to encode
-     * @param offset initial value for the subset of position variables
-     *               (past or future subset)
-     * @return the integer indentifer of the variable  b_[x,y] in the formula
-     **/
-    public int coordToLineal(int x, int y, int offset) {
-        return ((x - 1) * WorldDim) + (y - 1) + offset;
-    }
 
-    /**
-     * Perform the inverse computation to the previous function.
-     * That is, from the identifier t_[x,y] to the coordinates  (x,y)
-     * that it represents
-     *
-     * @param lineal identifier of the variable
-     * @param offset offset associated with the subset of variables that
-     *               lineal belongs to
-     * @return array with x and y coordinates
-     **/
-    public int[] linealToCoord(int lineal, int offset) {
-        lineal = lineal - offset + 1;
-        int[] coords = new int[2];
-        coords[1] = ((lineal - 1) % WorldDim) + 1;
-        coords[0] = (lineal - 1) / WorldDim + 1;
-        return coords;
-    }
+
 
 
 }
