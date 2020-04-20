@@ -8,6 +8,7 @@ import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
+import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -316,8 +317,19 @@ public class TreasureFinder {
     public void processPirateAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException {
 
+        int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
+        if (isup.equals("yes")) {
+            int[] vect = {enumerator.getLiteralUp(x,y)};
+            solver.addClause(new VecInt(vect));
+            addPirateDownClauses();
+
+        }else if (isup.equals("no")) {
+            int[] vect = {enumerator.getLiteralDown(x,y)};
+            solver.addClause(new VecInt(vect));
+            addPirateUpClauses();
+        }
         // isup should be either "yes" (is up of agent position), or "no"
 
         // Call your function/functions to add the evidence clauses
