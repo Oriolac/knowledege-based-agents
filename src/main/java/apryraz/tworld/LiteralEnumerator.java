@@ -13,7 +13,7 @@ public class LiteralEnumerator {
         this.WorldLinealDim = worldDim * worldDim;
     }
 
-    public int getNumClauses() {
+    public int getNumVars() {
         return (2 + 4 + 1 + 1) * this.WorldLinealDim;
     }
 
@@ -50,6 +50,13 @@ public class LiteralEnumerator {
         coords[1] = ((lineal - 1) % WorldDim) + 1;
         coords[0] = (lineal - 1) / WorldDim + 1;
         return coords;
+    }
+
+    public Position linealToPosition(int lineal) {
+        int pos = (lineal - 1) % WorldLinealDim + 1;
+        int x = pos % this.WorldDim + 1;
+        int y = pos / this.WorldDim + 1;
+        return new Position(x, y);
     }
 
     public int getEnumeratePosition(int x, int y) {

@@ -235,7 +235,7 @@ public class TreasureFinder {
         // Tell the EnvironmentAgentID that we want  to move
         AMessage msg, ans;
 
-        msg = new AMessage("moveto", (new Integer(x)).toString(), (new Integer(y)).toString(), "");
+        msg = new AMessage("moveto", String.valueOf(x), String.valueOf(x), "");
         ans = EnvAgent.acceptMessage(msg);
         System.out.println("FINDER => moving to : (" + x + "," + y + ")");
 
@@ -336,8 +336,12 @@ public class TreasureFinder {
      **/
     public void addLastFutureClausesToPastClauses() throws IOException,
             ContradictionException, TimeoutException {
-
-
+        for (VecInt conc: futureToPast) {
+            Position notPossiblePosition = enumerator.linealToPosition(Math.abs(conc.get(0)));
+            int[] ints = new int[]{-enumerator.getLiteralTPosition(notPossiblePosition, LiteralEnumerator.PAST)};
+            VecInt vec = new VecInt(ints);
+            solver.addClause(vec);
+        }
     }
 
     /**
@@ -354,22 +358,16 @@ public class TreasureFinder {
      **/
     public void performInferenceQuestions() throws IOException,
             ContradictionException, TimeoutException {
-        // EXAMPLE code to check this for position (2,3):
-        // Get variable number for position 2,3 in past variables
+        futureToPast = new ArrayList<>();
         int linealIndex = enumerator.getLiteralTPosition(currentPosition,  LiteralEnumerator.FUTURE);
-        // Get the same variable, but in the past subset
         int linealIndexPast = enumerator.getLiteralTPosition(currentPosition, LiteralEnumerator.PAST);
 
         VecInt variablePositive = new VecInt();
         variablePositive.insertFirst(linealIndex);
 
-        // Check if Gamma + variablePositive is unsatisfiable:
-        // This is only AN EXAMPLE for a specific position: (2,3)
         if (!(solver.isSatisfiable(variablePositive))) {
-            // Add conclusion to list, but rewritten with respect to "past" variables
             VecInt concPast = new VecInt();
             concPast.insertFirst(-(linealIndexPast));
-
             futureToPast.add(concPast);
             tfstate.set(currentPosition, "X");
         }
@@ -384,11 +382,8 @@ public class TreasureFinder {
      **/
     public ISolver buildGamma() throws UnsupportedEncodingException,
             FileNotFoundException, IOException, ContradictionException {
-        int totalNumVariables = enumerator.getNumClauses();
+        int totalNumVariables = enumerator.getNumVars();
 
-        // You must set this variable to the total number of boolean variables
-        // in your formula Gamma
-        // totalNumVariables =  ??
         solver = SolverFactory.newDefault();
         solver.setTimeout(3600);
         solver.newVar(totalNumVariables);
@@ -400,7 +395,6 @@ public class TreasureFinder {
         addPirateClauses();
         // call here functions to add the differen sets of clauses
         // of Gamma to the solver object
-
 
         return solver;
     }

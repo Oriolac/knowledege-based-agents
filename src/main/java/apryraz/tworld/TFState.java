@@ -34,23 +34,23 @@ public class TFState {
 
     public boolean equals(Object obj) {
         TFState tfstate2 = (TFState) obj;
-        boolean status = true;
 
         for (int i = 0; i < wDim; i++) {
             for (int j = 0; j < wDim; j++) {
-                if (!matrix[i][j].equals(tfstate2.matrix[i][j]))
-                    status = false;
+                if (!matrix[i][j].equals(tfstate2.matrix[i][j])) {
+                    return false;
+                }
             }
         }
 
-        return status;
+        return true;
     }
 
     public void printState() {
         System.out.println("FINDER => Printing Treasure world matrix");
-        for (int i = wDim - 1; i > -1; i--) {
+        for (int j = wDim - 1; j > -1; j--) {
             System.out.print("\t#\t");
-            for (int j = 0; j < wDim; j++) {
+            for (int i = 0; i < wDim; i++) {
                 System.out.print(matrix[i][j] + " ");
             }
             System.out.println("\t#");
