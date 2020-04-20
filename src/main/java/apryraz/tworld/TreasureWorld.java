@@ -32,12 +32,13 @@ public class TreasureWorld {
         // Make instances of TreasureFinder agent and environment object classes
         TreasureFinder TAgent;
         TreasureWorldEnv EnvAgent;
-
+        TAgent = new TreasureFinder(wDim);
 
         // Set environment object, and load list of pirate positions
-
-
+        EnvAgent = new TreasureWorldEnv(wDim, tX, tY, filePirates);
+        TAgent.setEnvironment(EnvAgent);
         // load list of steps into the Finder Agent
+        TAgent.loadListOfSteps(numSteps, fileSteps);
 
 
         // Execute sequence of steps with the Agent

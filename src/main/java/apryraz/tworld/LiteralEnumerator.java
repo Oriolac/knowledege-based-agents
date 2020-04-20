@@ -10,6 +10,10 @@ public class LiteralEnumerator {
         this.WorldLinealDim = worldDim * worldDim;
     }
 
+    public int getLiteralSize() {
+        return (2 + 4 + 1 + 1) * this.WorldLinealDim;
+    }
+
     public int getEnumeratePosition(int x, int y) {
         return (x - 1) * this.WorldDim + y;
     }

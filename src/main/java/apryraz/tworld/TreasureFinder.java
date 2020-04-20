@@ -1,8 +1,9 @@
 package apryraz.tworld;
 
-import apryraz.tworld.clauseconstructor.ClauseConstructor;
-import apryraz.tworld.clauseconstructor.ClauseSensor2Constr;
-import apryraz.tworld.clauseconstructor.ClauseSensor3Constr;
+import apryraz.tworld.clauses.ClauseBuilder;
+import apryraz.tworld.clauses.Sensor1Builder;
+import apryraz.tworld.clauses.Sensor2Builder;
+import apryraz.tworld.clauses.Sensor3Builder;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -210,7 +211,7 @@ public class TreasureFinder {
             return moveTo(nextPosition.x, nextPosition.y);
         } else {
             System.out.println("NO MORE steps to perform at agent!");
-            return (new AMessage("NOMESSAGE", "", ""));
+            return (new AMessage("NOMESSAGE", "", "", ""));
         }
     }
 
@@ -377,7 +378,7 @@ public class TreasureFinder {
      **/
     public ISolver buildGamma() throws UnsupportedEncodingException,
             FileNotFoundException, IOException, ContradictionException {
-        int totalNumVariables = (2 + 4 + 1 + 1) * this.WorldLinealDim;
+        int totalNumVariables = enumerator.getLiteralSize();
 
         // You must set this variable to the total number of boolean variables
         // in your formula Gamma
@@ -429,18 +430,18 @@ public class TreasureFinder {
 
 
     private void addSensorClauses() throws ContradictionException {
-        addSensor1Clause(solver);
+        addSensor1Clause(solver, new Sensor1Builder(enumerator));
         addSensor2Clause(solver);
         addSensor3Clause(solver);
     }
 
 
     private void addSensor3Clause(ISolver solver) throws ContradictionException {
-        ClauseConstructor clauseConstructor = new ClauseSensor3Constr(enumerator);
-        addSensorClauseDown(solver, 2, clauseConstructor);
-        addSensorClauseUp(solver, 3, clauseConstructor);
-        addSensorClauseLeft(solver, 2, clauseConstructor);
-        addSensorClauseRight(solver, 3, clauseConstructor);
+        ClauseBuilder clauseBuilder = new Sensor3Builder(enumerator);
+        addSensorClauseDown(solver, 2, clauseBuilder);
+        addSensorClauseUp(solver, 3, clauseBuilder);
+        addSensorClauseLeft(solver, 2, clauseBuilder);
+        addSensorClauseRight(solver, 3, clauseBuilder);
         addSensor3ClauseSquare(solver);
     }
 
@@ -462,22 +463,21 @@ public class TreasureFinder {
 
 
 
-    private void addSensor1Clause(ISolver solver) throws ContradictionException {
+    private void addSensor1Clause(ISolver solver, ClauseBuilder clauseBuilder) throws ContradictionException {
         for (int i = 0; i < this.WorldDim; i++) {
             for (int j = 0; j < this.WorldDim; j++) {
-                int[] vect = {-enumerator.getLiteralSensor1(i, j), -enumerator.getLiteralTPosition(i, j, 1)};
-                solver.addClause(new VecInt(vect));
+                solver.addClause(clauseBuilder.addClause(i,j,i,j));
             }
         }
     }
 
 
     private void addSensor2Clause(ISolver solver) throws ContradictionException {
-        ClauseConstructor clauseConstructor = new ClauseSensor2Constr(enumerator);
-        addSensorClauseDown(solver, 1, clauseConstructor);
-        addSensorClauseUp(solver, 2, clauseConstructor);
-        addSensorClauseLeft(solver, 1, clauseConstructor);
-        addSensorClauseRight(solver, 2, clauseConstructor);
+        ClauseBuilder clauseBuilder = new Sensor2Builder(enumerator);
+        addSensorClauseDown(solver, 1, clauseBuilder);
+        addSensorClauseUp(solver, 2, clauseBuilder);
+        addSensorClauseLeft(solver, 1, clauseBuilder);
+        addSensorClauseRight(solver, 2, clauseBuilder);
         addSensor2ClauseSame(solver);
     }
 
@@ -490,7 +490,7 @@ public class TreasureFinder {
         }
     }
 
-    private void addSensorClauseDown(ISolver solver, int limit, ClauseConstructor constr) throws ContradictionException {
+    private void addSensorClauseDown(ISolver solver, int limit, ClauseBuilder constr) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = 0; i < this.WorldDim; i++) {
@@ -502,7 +502,7 @@ public class TreasureFinder {
         }
     }
 
-    private void addSensorClauseUp(ISolver solver, int start, ClauseConstructor constr) throws ContradictionException {
+    private void addSensorClauseUp(ISolver solver, int start, ClauseBuilder constr) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = 0; i < this.WorldDim; i++) {
@@ -514,7 +514,7 @@ public class TreasureFinder {
         }
     }
 
-    private void addSensorClauseLeft(ISolver solver, int limit, ClauseConstructor constr) throws ContradictionException {
+    private void addSensorClauseLeft(ISolver solver, int limit, ClauseBuilder constr) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = 0; i < x - limit; i++) {
@@ -526,7 +526,7 @@ public class TreasureFinder {
         }
     }
 
-    private void addSensorClauseRight(ISolver solver, int start, ClauseConstructor constr) throws ContradictionException {
+    private void addSensorClauseRight(ISolver solver, int start, ClauseBuilder constr) throws ContradictionException {
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
                 for (int i = x + start; i < this.WorldDim; i++) {

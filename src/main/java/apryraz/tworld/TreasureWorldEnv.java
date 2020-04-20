@@ -1,10 +1,18 @@
 package apryraz.tworld;
 
+import javafx.util.Pair;
+
+import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class TreasureWorldEnv {
     /**
      * X,Y position of Treasure and world dimension
      **/
     int TreasureX, TreasureY, WorldDim;
+    List<Pair<Integer, Integer>> pirateLocations;
 
 
     /**
@@ -15,8 +23,7 @@ public class TreasureWorldEnv {
      * @param ty          Y position of Treasure
      * @param piratesFile File with list of pirates locations
      **/
-    public TreasureWorldEnv(int dim, int tx, int ty, String piratesFile) {
-
+    public TreasureWorldEnv(int dim, int tx, int ty, String piratesFile) throws IOException {
         TreasureX = tx;
         TreasureY = ty;
         WorldDim = dim;
@@ -26,12 +33,25 @@ public class TreasureWorldEnv {
     /**
      * Load the list of pirates locations
      *
-     * @param: name of the file that should contain a
+     * @param piratesFile: name of the file that should contain a
      * set of pirate locations in a single line.
      **/
-    public void loadPiratesLocations(String piratesFile) {
+    public void loadPiratesLocations(String piratesFile) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(piratesFile));
+        String line =reader.readLine();
+        pirateLocations = new LinkedList<>();
+        if (line != null) {
+            getPirateLocations(line);
+        }
+    }
 
-
+    protected void getPirateLocations(String line) {
+        StringTokenizer strtok = new StringTokenizer(line, ", ");
+        while (strtok.hasMoreTokens()) {
+            int x = Integer.parseInt(strtok.nextToken());
+            int y = Integer.parseInt(strtok.nextToken());
+            pirateLocations.add(new Pair<>(x, y));
+        }
     }
 
 
@@ -76,7 +96,11 @@ public class TreasureWorldEnv {
      * @return 1  if (x,y) contains a pirate, 0 otherwise
      **/
     public int isPirateInMyCell(int x, int y) {
-
+        for (Pair<Integer, Integer> location: pirateLocations) {
+            if( x == location.getKey() && y == location.getValue())
+                return 1;
+        }
+        return 0;
     }
 
 

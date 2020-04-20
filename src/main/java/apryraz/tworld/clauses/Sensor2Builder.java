@@ -1,13 +1,13 @@
-package apryraz.tworld.clauseconstructor;
+package apryraz.tworld.clauses;
 
 import apryraz.tworld.LiteralEnumerator;
 import org.sat4j.core.VecInt;
 
-public class ClauseSensor2Constr implements ClauseConstructor {
+public class Sensor2Builder implements ClauseBuilder {
 
     private final LiteralEnumerator en;
 
-    public ClauseSensor2Constr(LiteralEnumerator en) {
+    public Sensor2Builder(LiteralEnumerator en) {
         this.en = en;
     }
 
