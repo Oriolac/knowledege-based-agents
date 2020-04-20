@@ -1,18 +1,32 @@
 package apryraz.tworld.data;
 
-import apryraz.tworld.Position;
-
 public class LiteralEnumerator {
 
     private final int WorldDim;
     private final int WorldLinealDim;
     static public final int PAST = -1;
     static public final int FUTURE = 1;
+    public final int PAST_OFFSET = 0;
+    public final int FUTURE_OFFSET;
+    public final int SENSOR1_OFFSET;
+    public final int SENSOR2_OFFSET;
+    public final int SENSOR3_OFFSET;
+    public final int SENSOR0_OFFSET;
+    public final int UP_OFFSET;
+    public final int DOWN_OFFSET;
 
 
     public LiteralEnumerator(int worldDim) {
         this.WorldDim = worldDim;
         this.WorldLinealDim = worldDim * worldDim;
+        FUTURE_OFFSET = WorldLinealDim;
+        SENSOR1_OFFSET = 2 * WorldLinealDim;
+        SENSOR2_OFFSET = 3 * WorldLinealDim;
+        SENSOR3_OFFSET = 4 * WorldLinealDim;
+        SENSOR0_OFFSET = 5 * WorldLinealDim;
+        UP_OFFSET = 6 * WorldLinealDim;
+        DOWN_OFFSET = 7 * WorldLinealDim;
+
     }
 
     public int getNumVars() {
@@ -42,18 +56,8 @@ public class LiteralEnumerator {
      * that it represents
      *
      * @param lineal identifier of the variable
-     * @param offset offset associated with the subset of variables that
-     *               lineal belongs to
      * @return array with x and y coordinates
      **/
-    public int[] linealToCoord(int lineal, int offset) {
-        lineal = lineal - offset + 1;
-        int[] coords = new int[2];
-        coords[1] = ((lineal - 1) % WorldDim) + 1;
-        coords[0] = (lineal - 1) / WorldDim + 1;
-        return coords;
-    }
-
     public Position linealToPosition(int lineal) {
         int pos = (lineal - 1) % WorldLinealDim + 1;
         int x = pos % this.WorldDim + 1;
@@ -62,14 +66,14 @@ public class LiteralEnumerator {
     }
 
     public int getEnumeratePosition(int x, int y) {
-        return (y - 1) * this.WorldDim + x;
+        return (y) * this.WorldDim + x + 1;
     }
 
     public int getLiteralTPosition(int x, int y, int t) {
         if (t == PAST) {
-            return getEnumeratePosition(x, y);
+            return PAST_OFFSET + getEnumeratePosition(x, y);
         } else {
-            return this.WorldLinealDim + getEnumeratePosition(x, y);
+            return FUTURE_OFFSET + getEnumeratePosition(x, y);
         }
     }
 
@@ -78,24 +82,32 @@ public class LiteralEnumerator {
     }
 
     public int getLiteralDown(int x, int y) {
-        return 6 * this.WorldLinealDim + getEnumeratePosition(x, y);
+        return DOWN_OFFSET + getEnumeratePosition(x, y);
     }
 
     public int getLiteralUp(int x, int y) {
-        return 5 * this.WorldLinealDim + getEnumeratePosition(x, y);
+        return UP_OFFSET + getEnumeratePosition(x, y);
+    }
+
+    public int getLiteralSensor0(int x, int y) {
+        return SENSOR0_OFFSET + getEnumeratePosition(x, y);
     }
 
     public int getLiteralSensor3(int x, int y) {
-        return 4 * this.WorldLinealDim + getEnumeratePosition(x, y);
+        return SENSOR3_OFFSET + getEnumeratePosition(x, y);
     }
 
     public int getLiteralSensor2(int x, int y) {
-        return 3 * this.WorldLinealDim + getEnumeratePosition(x, y);
+        return SENSOR2_OFFSET + getEnumeratePosition(x, y);
     }
 
 
     public int getLiteralSensor1(int x, int y) {
-        return 2 * this.WorldLinealDim + getEnumeratePosition(x, y);
+        return SENSOR1_OFFSET + getEnumeratePosition(x, y);
     }
 
+
+    public int getWorldDim() {
+        return this.WorldDim;
+    }
 }

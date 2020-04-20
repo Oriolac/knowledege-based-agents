@@ -1,6 +1,4 @@
-package apryraz.tworld;
-
-import java.awt.*;
+package apryraz.tworld.data;
 
 public class TFState {
     /**

@@ -1,4 +1,4 @@
-package apryraz.tworld;
+package apryraz.tworld.data;
 
 import java.util.Objects;
 

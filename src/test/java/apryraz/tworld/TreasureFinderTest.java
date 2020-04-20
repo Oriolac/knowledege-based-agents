@@ -1,8 +1,6 @@
 package apryraz.tworld;
 
-import apryraz.tworld.TFState;
-import apryraz.tworld.TreasureFinder;
-import apryraz.tworld.TreasureWorldEnv;
+import apryraz.tworld.data.TFState;
 import org.junit.jupiter.api.Test;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;

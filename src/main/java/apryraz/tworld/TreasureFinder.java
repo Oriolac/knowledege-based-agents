@@ -1,16 +1,13 @@
 package apryraz.tworld;
 
-import apryraz.tworld.clauses.ClauseBuilder;
-import apryraz.tworld.clauses.Sensor1Builder;
-import apryraz.tworld.clauses.Sensor2Builder;
-import apryraz.tworld.clauses.Sensor3Builder;
+import apryraz.tworld.clauses.GammaBuilder;
 import apryraz.tworld.data.AMessage;
 import apryraz.tworld.data.LiteralEnumerator;
+import apryraz.tworld.data.Position;
+import apryraz.tworld.data.TFState;
 import org.sat4j.core.VecInt;
-import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
-import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -81,7 +78,6 @@ public class TreasureFinder {
     int TreasurePastOffset;
     int TreasureFutureOffset;
     int DetectorOffset;
-    int actualLiteral;
     private LiteralEnumerator enumerator;
 
 
@@ -295,15 +291,12 @@ public class TreasureFinder {
             if (s == 1) {
                 int[] vect = {enumerator.getLiteralSensor1(x, y)};
                 solver.addClause(new VecInt(vect));
-                //TODO
             } else if (s == 2) {
                 int[] vect = {enumerator.getLiteralSensor2(x, y)};
                 solver.addClause(new VecInt(vect));
-                //TODO
             } else if (s == 3) {
                 int[] vect = {enumerator.getLiteralSensor3(x, y)};
                 solver.addClause(new VecInt(vect));
-                //TODO
             } else {
                 //TODO: quan el detector retorna 0
             }
@@ -339,23 +332,12 @@ public class TreasureFinder {
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
         if (isup.equals("yes")) {
-            int[] vect = {enumerator.getLiteralUp(x,y)};
+            int[] vect = {enumerator.getLiteralUp(x, y)};
             solver.addClause(new VecInt(vect));
-            addPirateDownClauses();
-
-        }else {
-            int[] vect = {enumerator.getLiteralDown(x,y)};
+        } else {
+            int[] vect = {enumerator.getLiteralDown(x, y)};
             solver.addClause(new VecInt(vect));
-            addPirateUpClauses();
         }
-        // isup should be either "yes" (is up of agent position), or "no"
-
-        // Call your function/functions to add the evidence clauses
-        // to Gamma to then be able to infer new NOT possible positions
-
-
-        // CALL your functions HERE to update the solver object with more
-        // clauses
     }
 
 
@@ -366,7 +348,7 @@ public class TreasureFinder {
      **/
     public void addLastFutureClausesToPastClauses() throws IOException,
             ContradictionException, TimeoutException {
-        for (VecInt conc: futureToPast) {
+        for (VecInt conc : futureToPast) {
             Position notPossiblePosition = enumerator.linealToPosition(Math.abs(conc.get(0)));
             int[] ints = new int[]{-enumerator.getLiteralTPosition(notPossiblePosition, LiteralEnumerator.PAST)};
             VecInt vec = new VecInt(ints);
@@ -389,7 +371,7 @@ public class TreasureFinder {
     public void performInferenceQuestions() throws IOException,
             ContradictionException, TimeoutException {
         futureToPast = new ArrayList<>();
-        int linealIndex = enumerator.getLiteralTPosition(currentPosition,  LiteralEnumerator.FUTURE);
+        int linealIndex = enumerator.getLiteralTPosition(currentPosition, LiteralEnumerator.FUTURE);
         int linealIndexPast = enumerator.getLiteralTPosition(currentPosition, LiteralEnumerator.PAST);
 
         VecInt variablePositive = new VecInt();
@@ -412,171 +394,14 @@ public class TreasureFinder {
      **/
     public ISolver buildGamma() throws UnsupportedEncodingException,
             FileNotFoundException, IOException, ContradictionException {
-        int totalNumVariables = enumerator.getNumVars();
-
-        solver = SolverFactory.newDefault();
-        solver.setTimeout(3600);
-        solver.newVar(totalNumVariables);
+        GammaBuilder gammaBuilder = new GammaBuilder(enumerator);
         // This variable is used to generate, in a particular sequential order,
         // the variable indentifiers of all the variables
-        actualLiteral = 1;
-        addMemorableClauses();
-        addSensorClauses();
-        addPirateClauses();
+        solver = gammaBuilder.buildSolver();
         // call here functions to add the differen sets of clauses
         // of Gamma to the solver object
 
         return solver;
-    }
-
-    private void addMemorableClauses() throws ContradictionException {
-        for(int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                int[] vect = {-enumerator.getLiteralTPosition(x, y, LiteralEnumerator.PAST),
-                        -enumerator.getLiteralTPosition(x,y, LiteralEnumerator.FUTURE)};
-                solver.addClause(new VecInt(vect));
-            }
-        }
-    }
-
-    private void addPirateClauses() throws ContradictionException {
-        addPirateUpClauses();
-        addPirateDownClauses();
-    }
-
-    private void addPirateUpClauses() throws ContradictionException {
-        for(int x = 0; x < this.WorldDim; x++){
-            for(int y = 0; y < this.WorldDim; y++){
-                for(int i = 0; i < this.WorldDim; i++) {
-                    for(int j = 0; j <= y; j++) {
-                        int[] vect = {-enumerator.getLiteralUp(x,y), -enumerator.getLiteralTPosition(i, j, 1)};
-                        solver.addClause(new VecInt(vect));
-                    }
-                }
-            }
-        }
-    }
-
-    private void addPirateDownClauses() throws ContradictionException {
-        for(int x = 0; x < this.WorldDim; x++){
-            for(int y = 0; y < this.WorldDim; y++){
-                for(int i = 0; i < this.WorldDim; i++) {
-                    for(int j = y + 1; j < this.WorldDim; j++) {
-                        int[] vect = {-enumerator.getLiteralDown(x,y), -enumerator.getLiteralTPosition(i, j, 1)};
-                        solver.addClause(new VecInt(vect));
-                    }
-                }
-            }
-        }
-    }
-
-
-    private void addSensorClauses() throws ContradictionException {
-        addSensor1Clause(solver, new Sensor1Builder(enumerator));
-        addSensor2Clause(solver);
-        addSensor3Clause(solver);
-    }
-
-
-    private void addSensor3Clause(ISolver solver) throws ContradictionException {
-        ClauseBuilder clauseBuilder = new Sensor3Builder(enumerator);
-        addSensorClauseDown(solver, 2, clauseBuilder);
-        addSensorClauseUp(solver, 3, clauseBuilder);
-        addSensorClauseLeft(solver, 2, clauseBuilder);
-        addSensorClauseRight(solver, 3, clauseBuilder);
-        addSensor3ClauseSquare(solver);
-    }
-
-    private void addSensor3ClauseSquare(ISolver solver) throws ContradictionException {
-        for(int x = 0; x < this.WorldDim; x++) {
-            for (int y= 0; y < this.WorldDim; y++) {
-                for(int i = x -1 ; i <= x +1; i++) {
-                    for (int j = y - 1; j <= y + 1; j++) {
-                        if(!( i < 0 && j < 0)){
-                            int[] vect = {-enumerator.getLiteralSensor3(x, y), -enumerator.getLiteralTPosition(i, j, 1)};
-                            solver.addClause(new VecInt(vect));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-
-    private void addSensor1Clause(ISolver solver, ClauseBuilder clauseBuilder) throws ContradictionException {
-        for (int i = 0; i < this.WorldDim; i++) {
-            for (int j = 0; j < this.WorldDim; j++) {
-                solver.addClause(clauseBuilder.addClause(i,j,i,j));
-            }
-        }
-    }
-
-
-    private void addSensor2Clause(ISolver solver) throws ContradictionException {
-        ClauseBuilder clauseBuilder = new Sensor2Builder(enumerator);
-        addSensorClauseDown(solver, 1, clauseBuilder);
-        addSensorClauseUp(solver, 2, clauseBuilder);
-        addSensorClauseLeft(solver, 1, clauseBuilder);
-        addSensorClauseRight(solver, 2, clauseBuilder);
-        addSensor2ClauseSame(solver);
-    }
-
-    private void addSensor2ClauseSame(ISolver solver) throws ContradictionException {
-        for (int x = 0; x < this.WorldDim; x++){
-            for (int y = 0; y < this.WorldDim; y++) {
-                int[] vect = {-enumerator.getLiteralSensor2(x, y), -enumerator.getLiteralTPosition(x,y, 1)};
-                solver.addClause(new VecInt(vect));
-            }
-        }
-    }
-
-    private void addSensorClauseDown(ISolver solver, int limit, ClauseBuilder clauseBuilder) throws ContradictionException {
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = 0; i < this.WorldDim; i++) {
-                    for (int j = 0; j < y - limit; j++) {
-                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
-                    }
-                }
-            }
-        }
-    }
-
-    private void addSensorClauseUp(ISolver solver, int start, ClauseBuilder clauseBuilder) throws ContradictionException {
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = 0; i < this.WorldDim; i++) {
-                    for (int j = y + start; j < this.WorldDim; j++) {
-                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
-                    }
-                }
-            }
-        }
-    }
-
-    private void addSensorClauseLeft(ISolver solver, int limit, ClauseBuilder clauseBuilder) throws ContradictionException {
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = 0; i < x - limit; i++) {
-                    for (int j = 0; j < this.WorldDim; j++) {
-                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
-                    }
-                }
-            }
-        }
-    }
-
-    private void addSensorClauseRight(ISolver solver, int start, ClauseBuilder clauseBuilder) throws ContradictionException {
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = x + start; i < this.WorldDim; i++) {
-                    for (int j = 0; j < this.WorldDim; j++) {
-                        solver.addClause(clauseBuilder.addClause(x, y, i, j));
-                    }
-                }
-            }
-        }
     }
 
     public ArrayList<Position> getListOfSteps() {

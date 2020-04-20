@@ -1,6 +1,7 @@
 package apryraz.tworld;
 
 
+import apryraz.tworld.data.Position;
 import org.sat4j.reader.ParseFormatException;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;

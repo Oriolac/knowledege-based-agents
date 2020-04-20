@@ -1,5 +1,6 @@
 package apryraz.tworld;
 
+import apryraz.tworld.data.TFState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

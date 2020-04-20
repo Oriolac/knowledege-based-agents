@@ -1,6 +1,7 @@
 package apryraz.tworld;
 
 import apryraz.tworld.data.AMessage;
+import apryraz.tworld.data.Position;
 
 import java.io.*;
 import java.util.LinkedList;
