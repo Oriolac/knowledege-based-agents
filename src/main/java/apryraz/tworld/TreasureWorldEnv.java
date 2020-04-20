@@ -77,11 +77,16 @@ public class TreasureWorldEnv {
             } else
                 ans = new AMessage("notmovedto", msg.getComp(1), msg.getComp(2), "");
 
-        } else {
-            // YOU MUST ANSWER ALSO TO THE OTHER MESSAGE TYPES:
-            //   ( "detectsat", "x" , "y", "" )
-            //   ( "treasureup", "x", "y", "" )
+        } else if (msg.getComp(0).equals("detectsat")) {
+            ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "");
+
+        } else if (msg.getComp(0).equals("treasureup")) {
+            ans = new AMessage("treasurefoundup", msg.getComp(1), msg.getComp(2), "");
+
         }
+        // YOU MUST ANSWER ALSO TO THE OTHER MESSAGE TYPES:
+        //   ( "detectsat", "x" , "y", "" )
+        //   ( "treasureup", "x", "y", "" )
         return ans;
 
     }
