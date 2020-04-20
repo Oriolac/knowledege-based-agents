@@ -8,6 +8,7 @@ import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
+import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -284,11 +285,27 @@ public class TreasureFinder {
      **/
     public void processDetectorSensorAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException {
-
         int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
+        int s = Integer.parseInt((ans.getComp(3)));
         String detects = ans.getComp(0);
-
+        if (detects.equals("detectedsat")) {
+            if (s == 1) {
+                int[] vect = {enumerator.getLiteralSensor1(x, y)};
+                solver.addClause(new VecInt(vect));
+                //TODO
+            } else if (s == 2) {
+                int[] vect = {enumerator.getLiteralSensor2(x, y)};
+                solver.addClause(new VecInt(vect));
+                //TODO
+            } else if (s == 3) {
+                int[] vect = {enumerator.getLiteralSensor3(x, y)};
+                solver.addClause(new VecInt(vect));
+                //TODO
+            } else {
+                //TODO: quan el detector retorna 0
+            }
+        }
         // Call your function/functions to add the evidence clauses
         // to Gamma to then be able to infer new NOT possible positions
 
@@ -316,8 +333,19 @@ public class TreasureFinder {
     public void processPirateAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException {
 
+        int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
+        if (isup.equals("yes")) {
+            int[] vect = {enumerator.getLiteralUp(x,y)};
+            solver.addClause(new VecInt(vect));
+            addPirateDownClauses();
+
+        }else {
+            int[] vect = {enumerator.getLiteralDown(x,y)};
+            solver.addClause(new VecInt(vect));
+            addPirateUpClauses();
+        }
         // isup should be either "yes" (is up of agent position), or "no"
 
         // Call your function/functions to add the evidence clauses
