@@ -6,7 +6,7 @@ public class Position {
     /**
      *
      **/
-    public int x, y;
+    private int x, y;
 
     public Position(int a, int b) {
         x = a;

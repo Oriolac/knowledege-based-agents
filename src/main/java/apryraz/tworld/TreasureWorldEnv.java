@@ -1,5 +1,7 @@
 package apryraz.tworld;
 
+import apryraz.tworld.data.AMessage;
+
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,7 +75,7 @@ public class TreasureWorldEnv {
                 int pirate = isPirateInMyCell(nx, ny);
 
                 ans = new AMessage("movedto", msg.getComp(1), msg.getComp(2),
-                        (new Integer(pirate)).toString());
+                        Integer.valueOf(pirate).toString());
             } else
                 ans = new AMessage("notmovedto", msg.getComp(1), msg.getComp(2), "");
 
