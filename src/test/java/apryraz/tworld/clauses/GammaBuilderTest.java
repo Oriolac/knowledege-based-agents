@@ -33,22 +33,29 @@ class GammaBuilderTest {
         vecs = gammaBuilder.addMemorableClauses();
         for(int i = 1; i <= WLINEALDIM; i++) {
             assertEquals(-i, vecs.get(i-1).get(0));
+            assertEquals(-(i + en.FUTURE_OFFSET), vecs.get(i-1).get(1));
         }
     }
 
     @Test
     void addPirateUpClauses() throws ContradictionException {
         vecs = gammaBuilder.addPirateUpClauses();
+        vecs.forEach(System.out::println);
         for(int i = 1; i <= WLINEALDIM; i++) {
             assertEquals(-(i + en.UP_OFFSET), vecs.get(i-1).get(0));
+            for(int j = 0; j < WLINEALDIM; j++, i++){
+
+            }
         }
     }
 
     @Test
     void addPirateDownClauses() throws ContradictionException {
         vecs = gammaBuilder.addPirateDownClauses();
+        vecs.forEach(System.out::println);
         for(int i = 1; i <= WLINEALDIM; i++) {
             assertEquals(-(i + en.DOWN_OFFSET), vecs.get(i-1).get(0));
+            //for(int j = 0; 0 < )
         }
     }
 
@@ -61,37 +68,18 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addSensor0ClauseSquare() {
+    void addSensor0ClauseSquare() throws ContradictionException {
+        vecs = gammaBuilder.addSensor0ClauseSquare();
     }
 
     @Test
-    void addSensor1Clause() {
+    void addSensor1Clause() throws ContradictionException {
+        ClauseBuilder builder = new Sensor0Builder(en);
+        vecs = gammaBuilder.addSensor1Clause(builder);
     }
 
     @Test
-    void addSensor2ClauseSame() {
-    }
-
-    @Test
-    void addSensorClauseDown() {
-    }
-
-    @Test
-    void addSensorClauseUp() {
-    }
-
-    @Test
-    void addSensorClauseLeft() {
-    }
-
-    @Test
-    void addSensorClauseRight() {
-    }
-
-    @AfterEach
-    void finish() {
-        for (int i = 1; i <= WLINEALDIM; i++) {
-            assertEquals(-(i + en.FUTURE_OFFSET), vecs.get(i-1).get(1));
-        }
+    void addSensor2ClauseSame() throws ContradictionException {
+        vecs = gammaBuilder.addSensor2ClauseSame();
     }
 }

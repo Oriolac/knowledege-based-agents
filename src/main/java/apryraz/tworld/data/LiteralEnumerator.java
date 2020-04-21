@@ -59,9 +59,9 @@ public class LiteralEnumerator {
      * @return array with x and y coordinates
      **/
     public Position linealToPosition(int lineal) {
-        int pos = (lineal - 1) % WorldLinealDim + 1;
-        int x = pos % this.WorldDim + 1;
-        int y = pos / this.WorldDim + 1;
+        int pos = (lineal - 1) % WorldLinealDim;
+        int x = pos % this.WorldDim;
+        int y = pos / this.WorldDim;
         return new Position(x, y);
     }
 

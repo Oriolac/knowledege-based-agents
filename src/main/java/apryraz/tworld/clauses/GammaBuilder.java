@@ -41,6 +41,13 @@ public class GammaBuilder {
         return solver;
     }
 
+    protected void addSensorClauses() throws ContradictionException {
+        addSensor0ClauseSquare();
+        addSensor1Clause(new Sensor1Builder(en));
+        addSensor2Clause();
+        addSensor3Clause();
+    }
+
     protected List<VecInt> addMemorableClauses() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int y = 0; y < this.WorldDim; y++) {
@@ -58,6 +65,18 @@ public class GammaBuilder {
         addPirateUpClauses();
         addPirateDownClauses();
     }
+
+    protected void addSensor3Clause() throws ContradictionException {
+        ClauseBuilder clauseBuilder = new Sensor3Builder(en);
+        addSensorClauseDown(2, clauseBuilder);
+        addSensorClauseUp(3, clauseBuilder);
+        addSensorClauseLeft(2, clauseBuilder);
+        addSensorClauseRight(3, clauseBuilder);
+        addSensor3ClauseSquare();
+    }
+
+
+
 
     protected List<VecInt> addPirateUpClauses() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
@@ -92,22 +111,7 @@ public class GammaBuilder {
     }
 
 
-    protected void addSensorClauses() throws ContradictionException {
-        addSensor0ClauseSquare();
-        addSensor1Clause(new Sensor1Builder(en));
-        addSensor2Clause();
-        addSensor3Clause();
-    }
 
-
-    protected void addSensor3Clause() throws ContradictionException {
-        ClauseBuilder clauseBuilder = new Sensor3Builder(en);
-        addSensorClauseDown(2, clauseBuilder);
-        addSensorClauseUp(3, clauseBuilder);
-        addSensorClauseLeft(2, clauseBuilder);
-        addSensorClauseRight(3, clauseBuilder);
-        addSensor3ClauseSquare();
-    }
 
     protected List<VecInt> addSensor3ClauseSquare() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
@@ -164,10 +168,10 @@ public class GammaBuilder {
         addSensorClauseUp(2, clauseBuilder);
         addSensorClauseLeft(1, clauseBuilder);
         addSensorClauseRight(2, clauseBuilder);
-        addSensor2ClauseSame(solver);
+        addSensor2ClauseSame();
     }
 
-    protected List<VecInt> addSensor2ClauseSame(ISolver solver) throws ContradictionException {
+    protected List<VecInt> addSensor2ClauseSame() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
