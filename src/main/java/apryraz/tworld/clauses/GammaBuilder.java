@@ -117,10 +117,10 @@ public class GammaBuilder {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = x - 1; i <= x + 1; i++) {
-                    for (int j = y - 1; j <= y + 1; j++) {
-                        if (!(i < 0 && j < 0)) {
-                            int[] vect = {-en.getLiteralSensor3(x, y), -en.getLiteralTPosition(i, j, 1)};
+                for (int i = x - 1; i <= x + 1 && i < WorldDim; i++) {
+                    for (int j = y - 1; j <= y + 1 && j < WorldDim; j++) {
+                        if ((i >= 0 && j >= 0)) {
+                            int[] vect = {-en.getLiteralSensor3(x, y), -en.getLiteralTPosition(i, j, LiteralEnumerator.FUTURE)};
                             vecs.add(new VecInt(vect));
                         }
                     }
@@ -136,9 +136,9 @@ public class GammaBuilder {
         Sensor0Builder sensorBuilder = new Sensor0Builder(this.en);
         for (int x = 0; x < this.WorldDim; x++) {
             for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = x - 2; i <= x + 2; i++) {
-                    for (int j = y - 2; j <= y + 2; j++) {
-                        if (!(i < 0 && j < 0)) {
+                for (int i = x - 2; i <= x + 2 && i < WorldDim; i++) {
+                    for (int j = y - 2; j <= y + 2 && j < WorldDim; j++) {
+                        if (i >= 0 && j >= 0) {
                             vecs.add(sensorBuilder.addClause(x, y, i, j));
                         }
                     }

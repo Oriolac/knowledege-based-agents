@@ -400,7 +400,6 @@ public class TreasureFinder {
         solver = gammaBuilder.buildSolver();
         // call here functions to add the differen sets of clauses
         // of Gamma to the solver object
-
         return solver;
     }
 

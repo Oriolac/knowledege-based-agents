@@ -81,8 +81,37 @@ public class LiteralEnumeratorTest {
     void linealToPosition() {
         for (int i = 0; i < WORLD_DIM; i++) {
             for (int j = 0; j < WORLD_DIM; j++) {
-                assertEquals(new Position(i, j), en.linealToPosition(j * WORLD_DIM + i + 1));
+                assertPosition(i, j, j * WORLD_DIM + i + 1);
+                assertPosition(i, j, en.getLiteralTPosition(i, j, LiteralEnumerator.FUTURE));
+                assertPosition(i, j, en.getLiteralSensor0(i, j));
+                assertPosition(i, j, en.getLiteralSensor1(i, j));
+                assertPosition(i, j, en.getLiteralSensor2(i, j));
+                assertPosition(i, j, en.getLiteralSensor3(i, j));
+                assertPosition(i, j, en.getLiteralUp(i, j));
+                assertPosition(i, j, en.getLiteralDown(i, j));
             }
         }
+    }
+
+    @Test
+    void negLinealToPosition() {
+        for (int i = 0; i < WORLD_DIM; i++) {
+            for (int j = 0; j < WORLD_DIM; j++) {
+                int negi = -i;
+                int negj = -j;
+                assertPosition(i, j, j * WORLD_DIM + i + 1);
+                assertPosition(i, j, en.getLiteralTPosition(negi, negj, LiteralEnumerator.FUTURE));
+                assertPosition(i, j, en.getLiteralSensor0(negi, negj));
+                assertPosition(i, j, en.getLiteralSensor1(negi, negj));
+                assertPosition(i, j, en.getLiteralSensor2(negi, negj));
+                assertPosition(i, j, en.getLiteralSensor3(negi, negj));
+                assertPosition(i, j, en.getLiteralUp(negi, negj));
+                assertPosition(i, j, en.getLiteralDown(negi, negj));
+            }
+        }
+    }
+
+    private void assertPosition(int i, int j, int lineal) {
+        assertEquals(new Position(i, j), en.linealToPosition(lineal));
     }
 }

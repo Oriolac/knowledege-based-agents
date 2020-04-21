@@ -42,4 +42,8 @@ public class Position {
     public int getY() {
         return y;
     }
+
+    public boolean isAdjacent(Position p2, int dist) {
+        return x <= p2.getX() + dist && x >= p2.getX() - dist && y <= p2.getY() + dist && y >= p2.getY() - dist;
+    }
 }

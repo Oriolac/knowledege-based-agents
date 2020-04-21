@@ -1,5 +1,7 @@
 package apryraz.tworld.data;
 
+import org.sat4j.core.VecInt;
+
 public class LiteralEnumerator {
 
     private final int WorldDim;
@@ -59,6 +61,7 @@ public class LiteralEnumerator {
      * @return array with x and y coordinates
      **/
     public Position linealToPosition(int lineal) {
+        lineal = Math.abs(lineal);
         int pos = (lineal - 1) % WorldLinealDim;
         int x = pos % this.WorldDim;
         int y = pos / this.WorldDim;
@@ -66,6 +69,8 @@ public class LiteralEnumerator {
     }
 
     public int getEnumeratePosition(int x, int y) {
+        x = Math.abs(x);
+        y = Math.abs(y);
         return (y) * this.WorldDim + x + 1;
     }
 
@@ -77,6 +82,10 @@ public class LiteralEnumerator {
         }
     }
 
+    public int getLiteralTPosition(VecInt vec, int t) {
+        return this.getLiteralTPosition(Math.abs(vec.get(0)), Math.abs(vec.get(1)), t);
+    }
+
     public int getLiteralTPosition(Position position, int t) {
         return getLiteralTPosition(position.getX(), position.getY(), t);
     }
@@ -84,6 +93,7 @@ public class LiteralEnumerator {
     public int getLiteralDown(int x, int y) {
         return DOWN_OFFSET + getEnumeratePosition(x, y);
     }
+
 
     public int getLiteralUp(int x, int y) {
         return UP_OFFSET + getEnumeratePosition(x, y);
@@ -97,10 +107,10 @@ public class LiteralEnumerator {
         return SENSOR3_OFFSET + getEnumeratePosition(x, y);
     }
 
+
     public int getLiteralSensor2(int x, int y) {
         return SENSOR2_OFFSET + getEnumeratePosition(x, y);
     }
-
 
     public int getLiteralSensor1(int x, int y) {
         return SENSOR1_OFFSET + getEnumeratePosition(x, y);
