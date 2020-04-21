@@ -78,7 +78,17 @@ public class TreasureWorldEnv {
                 ans = new AMessage("notmovedto", msg.getComp(1), msg.getComp(2), "");
 
         } else if (msg.getComp(0).equals("detectsat")) {
-            ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "");
+            int cx = Integer.parseInt(msg.getComp(1));
+            int cy = Integer.parseInt(msg.getComp(2));
+            if (cx == TreasureX && cy == TreasureY) {
+                ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "1");
+            } else if (TreasureX >= cx - 1 && TreasureX <= cx + 1 && TreasureY >= cy - 1 && TreasureY <= cy + 1) {
+                ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "2");
+            } else if (TreasureX >= cx - 2 && TreasureX <= cx + 2 && TreasureY >= cy - 2 && TreasureY <= cy + 2) {
+                ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "3");
+            } else {
+                ans = new AMessage("detectedsat", msg.getComp(1), msg.getComp(2), "0");
+            }
 
         } else if (msg.getComp(0).equals("treasureup")) {
             ans = new AMessage("yes", msg.getComp(1), msg.getComp(2), "");
