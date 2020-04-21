@@ -59,8 +59,6 @@ class GammaBuilderTest {
     @Test
     void addPirateDownClauses() throws ContradictionException {
         vecs = gammaBuilder.addPirateDownClauses();
-        vecs.forEach(a -> System.out.println(en.linealToPosition(a.get(0)).toString() +
-                en.linealToPosition(a.get(1)).toString()));
         int x = 0;
         for (int v = 0; v < vecs.size(); x++) {
             for (int y = 0; y < WDIM - 1; y++) {

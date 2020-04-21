@@ -46,4 +46,8 @@ public class Position {
     public boolean isAdjacent(Position p2, int dist) {
         return x <= p2.getX() + dist && x >= p2.getX() - dist && y <= p2.getY() + dist && y >= p2.getY() - dist;
     }
+
+    public boolean isDown(Position p2) {
+        return this.y < p2.getY();
+    }
 }
