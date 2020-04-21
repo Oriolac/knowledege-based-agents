@@ -91,7 +91,12 @@ public class TreasureWorldEnv {
             }
 
         } else if (msg.getComp(0).equals("treasureup")) {
-            ans = new AMessage("yes", msg.getComp(1), msg.getComp(2), "");
+            int cy = Integer.parseInt(msg.getComp(2));
+            if (TreasureY > cy) {
+                ans = new AMessage("yes", msg.getComp(1), msg.getComp(2), "");
+            } else {
+                ans = new AMessage("no", msg.getComp(1), msg.getComp(2), "");
+            }
 
         }
         // YOU MUST ANSWER ALSO TO THE OTHER MESSAGE TYPES:

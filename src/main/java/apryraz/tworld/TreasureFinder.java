@@ -341,7 +341,7 @@ public class TreasureFinder {
             solver.addClause(new VecInt(vect));
             addPirateDownClauses();
 
-        }else {
+        }else if (isup.equals("no")) {
             int[] vect = {enumerator.getLiteralDown(x,y)};
             solver.addClause(new VecInt(vect));
             addPirateUpClauses();
