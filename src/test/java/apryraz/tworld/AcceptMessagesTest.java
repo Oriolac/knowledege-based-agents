@@ -1,13 +1,15 @@
 package apryraz.tworld;
 
-import org.junit.Before;
-import org.junit.Test;
+import apryraz.tworld.data.AMessage;
+import apryraz.tworld.data.LiteralEnumerator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AcceptMessageTest {
+public class AcceptMessagesTest {
 
     private static final int X = 3;
     private static final int Y = 3;
@@ -24,7 +26,7 @@ public class AcceptMessageTest {
     TreasureWorldEnv tWorldEnv3;
     LiteralEnumerator enumerator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         enumerator = new LiteralEnumerator(WorldDim);
         //tFinder = new TreasureFinder(WorldDim);
