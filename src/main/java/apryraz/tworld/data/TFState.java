@@ -27,7 +27,7 @@ public class TFState {
     }
 
     public void set(Position position, String val) {
-        set(position.getX(), position.getY(), val);
+        set(position.getY(), position.getX(), val);
     }
 
     public boolean equals(Object obj) {
@@ -36,8 +36,9 @@ public class TFState {
         TFState tfstate2 = (TFState) obj;
         if (wDim != ((TFState) obj).wDim)
             return false;
-        for (int i = 0; i < wDim; i++) {
-            for (int j = 0; j < wDim; j++) {
+        for (int j = 0; j < wDim; j++) {
+            for (int i = 0; i < wDim; i++) {
+
                 if (!matrix[i][j].equals(tfstate2.matrix[i][j])) {
                     return false;
                 }

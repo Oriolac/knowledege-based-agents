@@ -1,5 +1,6 @@
 package apryraz.tworld;
 
+import apryraz.tworld.data.Position;
 import apryraz.tworld.data.TFState;
 import org.junit.jupiter.api.Test;
 import org.sat4j.specs.ContradictionException;
@@ -10,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,6 +132,12 @@ public class TreasureFinderTest {
 
         // Test here the sequence of steps and check the resulting states with the
         // ones in seqOfStates
+        // Execute sequence of steps with the Agent
+        List<Position> positions = TAgent.getListOfSteps();
+        for(Position position: positions) {
+
+            TAgent.runNextStep();
+        }
 
 
     }

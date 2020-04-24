@@ -87,7 +87,7 @@ public class LiteralEnumerator {
     }
 
     public int getLiteralTPosition(Position position, int t) {
-        return getLiteralTPosition(position.getX(), position.getY(), t);
+        return getLiteralTPosition(position.getX() - 1, position.getY() - 1, t);
     }
 
     public int getLiteralDown(int x, int y) {

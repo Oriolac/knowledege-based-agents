@@ -102,6 +102,7 @@ public class TreasureFinder {
         numMovements = 0;
         idNextStep = 0;
         System.out.println("STARTING TREASURE FINDER AGENT...");
+        futureToPast = new ArrayList<>();
 
 
         tfstate = new TFState(WorldDim);  // Initialize state (matrix) of knowledge with '?'
@@ -357,11 +358,13 @@ public class TreasureFinder {
      **/
     public void addLastFutureClausesToPastClauses() throws IOException,
             ContradictionException, TimeoutException {
-        for (VecInt conc : futureToPast) {
-            Position notPossiblePosition = enumerator.linealToPosition(Math.abs(conc.get(0)));
-            int[] ints = new int[]{-enumerator.getLiteralTPosition(notPossiblePosition, LiteralEnumerator.PAST)};
-            VecInt vec = new VecInt(ints);
-            solver.addClause(vec);
+        if (futureToPast != null) {
+            for (VecInt conc : futureToPast) {
+                Position notPossiblePosition = enumerator.linealToPosition(Math.abs(conc.get(0)));
+                int[] ints = new int[]{-enumerator.getLiteralTPosition(notPossiblePosition, LiteralEnumerator.PAST)};
+                VecInt vec = new VecInt(ints);
+                solver.addClause(vec);
+            }
         }
     }
 
@@ -379,9 +382,18 @@ public class TreasureFinder {
      **/
     public void performInferenceQuestions() throws IOException,
             ContradictionException, TimeoutException {
-        futureToPast = new ArrayList<>();
-        int linealIndex = enumerator.getLiteralTPosition(currentPosition, LiteralEnumerator.FUTURE);
-        int linealIndexPast = enumerator.getLiteralTPosition(currentPosition, LiteralEnumerator.PAST);
+        for (int i = 1; i <= WorldDim; i++) {
+            for (int j = 1; j <= WorldDim; j++) {
+                Position p = new Position(i, j);
+                checkPosition(p);
+            }
+        }
+
+    }
+
+    private void checkPosition(Position p) throws TimeoutException {
+        int linealIndex = enumerator.getLiteralTPosition(p, LiteralEnumerator.FUTURE);
+        int linealIndexPast = enumerator.getLiteralTPosition(p, LiteralEnumerator.PAST);
 
         VecInt variablePositive = new VecInt();
         variablePositive.insertFirst(linealIndex);
@@ -392,11 +404,11 @@ public class TreasureFinder {
             // Add conclusion to list, but rewritten with respect to "past" variables
             VecInt concPast = new VecInt();
             concPast.insertFirst(-(linealIndexPast));
-
-            futureToPast.add(concPast);
-            tfstate.set(currentPosition, "X");
+            if (!futureToPast.contains(concPast)) {
+                futureToPast.add(concPast);
+                tfstate.set(p, "X");
+            }
         }
-
     }
 
     /**
