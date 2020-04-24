@@ -334,10 +334,18 @@ public class TreasureFinder {
         if (isup.equals("yes")) {
             int[] vect = {enumerator.getLiteralUp(x, y)};
             solver.addClause(new VecInt(vect));
-        } else {
+        } else if (isup.equals("no")) {
             int[] vect = {enumerator.getLiteralDown(x, y)};
             solver.addClause(new VecInt(vect));
         }
+        // isup should be either "yes" (is up of agent position), or "no"
+
+        // Call your function/functions to add the evidence clauses
+        // to Gamma to then be able to infer new NOT possible positions
+
+
+        // CALL your functions HERE to update the solver object with more
+        // clauses
     }
 
 
@@ -377,9 +385,13 @@ public class TreasureFinder {
         VecInt variablePositive = new VecInt();
         variablePositive.insertFirst(linealIndex);
 
+        // Check if Gamma + variablePositive is unsatisfiable:
+        // This is only AN EXAMPLE for a specific position: (2,3)
         if (!(solver.isSatisfiable(variablePositive))) {
+            // Add conclusion to list, but rewritten with respect to "past" variables
             VecInt concPast = new VecInt();
             concPast.insertFirst(-(linealIndexPast));
+
             futureToPast.add(concPast);
             tfstate.set(currentPosition, "X");
         }
@@ -400,6 +412,8 @@ public class TreasureFinder {
         solver = gammaBuilder.buildSolver();
         // call here functions to add the differen sets of clauses
         // of Gamma to the solver object
+
+
         return solver;
     }
 
