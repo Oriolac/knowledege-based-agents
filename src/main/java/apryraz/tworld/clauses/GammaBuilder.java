@@ -9,12 +9,20 @@ import org.sat4j.specs.ISolver;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * class to initialize Gamma at the beginning
+ */
 public class GammaBuilder {
 
     private final LiteralEnumerator en;
     private final int WorldDim;
     private ISolver solver;
 
+    /**
+     * constructor of the class GammaBuilder
+     * @param enumerator Literal Enumerator where we find the functions needed
+     * in order to initialize the variables of the class
+     */
     public GammaBuilder(LiteralEnumerator enumerator) {
         this.en = enumerator;
         WorldDim = enumerator.getWorldDim();
@@ -24,12 +32,22 @@ public class GammaBuilder {
         solver.newVar(totalNumVariables);
     }
 
+    /**
+     * adds clauses from a list of VecInt to the solver
+     * @param vecs list of clauses
+     * @throws ContradictionException
+     */
     public void addClauses(List<VecInt> vecs) throws ContradictionException {
         for (VecInt clause: vecs) {
             solver.addClause(clause);
         }
     }
 
+    /**
+     * call different function to build the solver
+     * @return the solver builded
+     * @throws ContradictionException
+     */
     public ISolver buildSolver() throws ContradictionException {
         addMemorableClauses();
         addSensorClauses();
@@ -41,6 +59,11 @@ public class GammaBuilder {
         return solver;
     }
 
+    /**
+     * call different functions in order to add the relevant clauses for every
+     * answer of the metal detector
+     * @throws ContradictionException
+     */
     protected void addSensorClauses() throws ContradictionException {
         addSensor0ClauseSquare();
         addSensor1Clause(new Sensor1Builder(en));
@@ -48,6 +71,12 @@ public class GammaBuilder {
         addSensor3Clause();
     }
 
+    /**
+     * for every position of the world, this function adds a vector with this position
+     * with time in past and time in future
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addMemorableClauses() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int y = 0; y < this.WorldDim; y++) {
@@ -61,11 +90,20 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * calls the functions which add the pirate clauses
+     * @throws ContradictionException
+     */
     protected void addPirateClauses() throws ContradictionException {
         addPirateUpClauses();
         addPirateDownClauses();
     }
 
+    /**
+     * calls the functions which add the clauses relevant to when
+     * the value returned by the metal sensor is 3
+     * @throws ContradictionException
+     */
     protected void addSensor3Clause() throws ContradictionException {
         ClauseBuilder clauseBuilder = new Sensor3Builder(en);
         addSensorClauseDown(2, clauseBuilder);
@@ -75,9 +113,11 @@ public class GammaBuilder {
         addSensor3ClauseSquare();
     }
 
-
-
-
+    /**
+     * adds the relevant clauses when the answer of the pirate is that the treasure is down
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addPirateUpClauses() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -94,6 +134,11 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * adds the relevant clauses when the answer of the pirate is that the treasure is up
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addPirateDownClauses() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -110,9 +155,12 @@ public class GammaBuilder {
         return vecs;
     }
 
-
-
-
+    /**
+     * adds part of the relevant clauses for the positions inside the 5x5
+     * box when the metal sensor returns 3
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensor3ClauseSquare() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -131,6 +179,12 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * add part of the relevant clauses when the metal sensor returns 0, which are the ones
+     * in which the postions are not outside the 5x5 box
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensor0ClauseSquare() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         Sensor0Builder sensorBuilder = new Sensor0Builder(this.en);
@@ -149,7 +203,13 @@ public class GammaBuilder {
         return vecs;
     }
 
-
+    /**
+     * add the relevant clauses when the metal sensor returns 1
+     * @param clauseBuilder adds the clauses with the literals that
+     * correspond to the sensor
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensor1Clause(ClauseBuilder clauseBuilder) throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int i = 0; i < this.WorldDim; i++) {
@@ -161,7 +221,11 @@ public class GammaBuilder {
         return vecs;
     }
 
-
+    /**
+     * calls all the necessary functions in order to add all the clauses when
+     * the metal sensor returns 2
+     * @throws ContradictionException
+     */
     protected void addSensor2Clause() throws ContradictionException {
         ClauseBuilder clauseBuilder = new Sensor2Builder(en);
         addSensorClauseDown(1, clauseBuilder);
@@ -171,6 +235,12 @@ public class GammaBuilder {
         addSensor2ClauseSame();
     }
 
+    /**
+     * adds the clause which correspond to the actual position of the agent,
+     * for the case that the metal sensor returns 2
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensor2ClauseSame() throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -183,6 +253,15 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * adds the relevant clauses for the positions below the coordinate y where
+     * the agent is
+     * @param limit coordinate y of the actual position of the agent
+     * @param clauseBuilder adds the clauses with the literals that correspond
+     * to the sensor
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensorClauseDown(int limit, ClauseBuilder clauseBuilder) throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -198,6 +277,15 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * adds the relevant clauses for the positions above the coordinate y
+     * where the agent is
+     * @param start coordinate y of the actual position of the agent
+     * @param clauseBuilder adds the clauses with the literals that correspond
+     * to the sensor
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensorClauseUp(int start, ClauseBuilder clauseBuilder) throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -213,6 +301,15 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * adds the relevant clauses for the positions to the left of the
+     * coordinate y where the agent is
+     * @param limit coordinate y of the actual position of the agent
+     * @param clauseBuilder adds the clauses with the literals that
+     * correspond to the sensor
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensorClauseLeft(int limit, ClauseBuilder clauseBuilder) throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {
@@ -228,6 +325,15 @@ public class GammaBuilder {
         return vecs;
     }
 
+    /**
+     * adds the relevant clauses for the positions to teh right of te
+     * coordinate y where the agent is
+     * @param start coordinate y of the actual position of the agent
+     * @param clauseBuilder adds the clauses with the literals that
+     * correspond to the sensor
+     * @return list of VecInt with all the clauses added previously
+     * @throws ContradictionException
+     */
     protected List<VecInt> addSensorClauseRight(int start, ClauseBuilder clauseBuilder) throws ContradictionException {
         List<VecInt> vecs = new LinkedList<>();
         for (int x = 0; x < this.WorldDim; x++) {

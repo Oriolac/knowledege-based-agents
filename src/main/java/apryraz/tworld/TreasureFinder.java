@@ -299,6 +299,7 @@ public class TreasureFinder {
                 int[] vect = {enumerator.getLiteralSensor3(x, y)};
                 solver.addClause(new VecInt(vect));
             } else {
+                int[] vect = {enumerator.getLiteralSensor0(x, y)};
                 //TODO: quan el detector retorna 0
             }
         }
@@ -326,6 +327,12 @@ public class TreasureFinder {
         return ans;
     }
 
+
+    /**
+     * Process the answer obtained for the query: "treasureup (x,y)?"
+     *
+     * @param ans answer given by the pirate
+     */
     public void processPirateAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException {
 
