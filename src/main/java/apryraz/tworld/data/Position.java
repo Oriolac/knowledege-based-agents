@@ -50,4 +50,20 @@ public class Position {
     public boolean isDown(Position p2) {
         return this.y < p2.getY();
     }
+
+    public boolean isUp(Position p2) {
+        return this.y > p2.getY();
+    }
+
+    public boolean isInSameLine(Position p2) {
+        return this.y == p2.getY();
+    }
+
+    public boolean isLeft(Position p2) {
+        return this.x < p2.getX();
+    }
+
+    public boolean isRight(Position p2) {
+        return this.x > p2.getX();
+    }
 }

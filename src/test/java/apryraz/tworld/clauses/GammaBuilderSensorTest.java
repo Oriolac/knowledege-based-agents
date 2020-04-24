@@ -18,34 +18,51 @@ public abstract class GammaBuilderSensorTest {
     LiteralEnumerator en;
     ClauseBuilder cb;
     int limit;
+    int start;
 
     @Test
     void addSensorClauseDown() throws ContradictionException {
         vecs = gammaBuilder.addSensorClauseDown(limit, cb);
-        for (int x = 0; x < vecs.size(); x++) {
-            VecInt vec = vecs.get(x);
+        for (VecInt vec : vecs) {
             Position p1 = en.linealToPosition(vec.get(0));
             Position p2 = en.linealToPosition(vec.get(1));
-            for (int i = 0; i < WDIM; i++) {
-                for (int j = 0; j < p1.getY() - limit; j++, x++) {
-                    assertTrue(p2.isDown(p1));
-                }
-            }
+            assertTrue(p2.isDown(p1));
+            assertTrue(p2.getY() < p1.getY() - limit);
         }
     }
 
+    @Test
     void addSensorClauseUp() throws ContradictionException {
-        vecs = gammaBuilder.addSensorClauseUp(limit, cb);
+        vecs = gammaBuilder.addSensorClauseUp(start, cb);
+        for (VecInt vec : vecs) {
+            Position p1 = en.linealToPosition(vec.get(0));
+            Position p2 = en.linealToPosition(vec.get(1));
+            assertTrue(p2.isUp(p1));
+            assertTrue(p2.getY() > p1.getY() + limit);
+        }
+
+    }
+
+    @Test
+    void addSensorClauseLeft() throws ContradictionException {
+        vecs = gammaBuilder.addSensorClauseLeft(limit, cb);
         vecs.forEach(a -> System.out.println(en.linealToPosition(a.get(0)).toString() + en.linealToPosition(a.get(1)).toString()));
-
-
+        for (VecInt vec : vecs) {
+            Position p1 = en.linealToPosition(vec.get(0));
+            Position p2 = en.linealToPosition(vec.get(1));
+            assertTrue(p2.isLeft(p1));
+            assertTrue(p2.getX() < p1.getX() - limit);
+        }
     }
 
-    void addSensorClauseLeft() {
-
-    }
-
-    void addSensorClauseRight() {
-
+    @Test
+    void addSensorClauseRight() throws ContradictionException {
+        vecs = gammaBuilder.addSensorClauseRight(start, cb);
+        for (VecInt vec : vecs) {
+            Position p1 = en.linealToPosition(vec.get(0));
+            Position p2 = en.linealToPosition(vec.get(1));
+            assertTrue(p2.isRight(p1));
+            assertTrue(p2.getX() > p1.getX() + limit);
+        }
     }
 }

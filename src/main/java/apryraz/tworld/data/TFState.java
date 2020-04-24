@@ -31,8 +31,11 @@ public class TFState {
     }
 
     public boolean equals(Object obj) {
+        if (!(obj instanceof TFState))
+            return false;
         TFState tfstate2 = (TFState) obj;
-
+        if (wDim != ((TFState) obj).wDim)
+            return false;
         for (int i = 0; i < wDim; i++) {
             for (int j = 0; j < wDim; j++) {
                 if (!matrix[i][j].equals(tfstate2.matrix[i][j])) {

@@ -15,5 +15,6 @@ public class GammaSensor2Test extends GammaBuilderSensorTest {
         gammaBuilder = new GammaBuilder(en);
         cb = new Sensor2Builder(en);
         limit = 1;
+        start = 2;
     }
 }
