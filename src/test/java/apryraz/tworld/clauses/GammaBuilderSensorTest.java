@@ -52,7 +52,7 @@ public abstract class GammaBuilderSensorTest {
             Position p1 = en.linealToPosition(vec.get(0));
             Position p2 = en.linealToPosition(vec.get(1));
             assertTrue(p2.isLeft(p1));
-            assertTrue(p2.getX() < p1.getX() - limit);
+            assertTrue(p2.getX() < p1.getX() - limit, p2.toString() + " < " + p1.toString() + " x -= 1");
         }
     }
 

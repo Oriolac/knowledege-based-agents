@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GammaBuilderTest {
 
 
-    private static final int WDIM = 4;
+    private static final int WDIM = 6;
     private static final int WLINEALDIM = WDIM * WDIM;
     private LiteralEnumerator en;
     private GammaBuilder gammaBuilder;
