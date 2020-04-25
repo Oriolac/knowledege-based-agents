@@ -15,7 +15,7 @@ public class Sensor1Builder implements ClauseBuilder {
 
     @Override
     public VecInt addClause(int x, int y, int i, int j) throws UnsupportedOperationException, NotCorrectPositionException {
-        if (x != i || y != j)
+        if (x == i && y == j)
             throw new UnsupportedOperationException();
         int[] vect = {-en.getLiteralSensor1(x, y), -en.getLiteralTPosition(i, j, 1)};
         return new VecInt(vect);

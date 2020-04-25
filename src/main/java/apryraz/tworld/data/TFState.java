@@ -50,13 +50,14 @@ public class TFState {
 
     public void printState() {
         System.out.println("FINDER => Printing Treasure world matrix");
-        for (int j = wDim - 1; j > -1; j--) {
+        for (int i = wDim - 1; i > -1; i--) {
             System.out.print("\t#\t");
-            for (int i = 0; i < wDim; i++) {
+            for (int j = 0; j < wDim; j++) {
                 System.out.print(matrix[i][j] + " ");
             }
             System.out.println("\t#");
         }
+
     }
 
 }

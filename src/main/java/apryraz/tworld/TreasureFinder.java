@@ -233,7 +233,7 @@ public class TreasureFinder {
         // Tell the EnvironmentAgentID that we want  to move
         AMessage msg, ans;
 
-        msg = new AMessage("moveto", String.valueOf(x), String.valueOf(x), "");
+        msg = new AMessage("moveto", String.valueOf(x), String.valueOf(y), "");
         ans = EnvAgent.acceptMessage(msg);
         System.out.println("FINDER => moving to : (" + x + "," + y + ")");
 

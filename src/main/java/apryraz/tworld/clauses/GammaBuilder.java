@@ -154,9 +154,15 @@ public class GammaBuilder {
 
     protected List<VecInt> addSensor1Clause(ClauseBuilder clauseBuilder) throws ContradictionException, NotCorrectPositionException {
         List<VecInt> vecs = new LinkedList<>();
-        for (int i = 1; i <= this.WorldDim; i++) {
-            for (int j = 1; j <= this.WorldDim; j++) {
-                vecs.add(clauseBuilder.addClause(i, j, i, j));
+        for (int x = 1; x <= this.WorldDim; x++) {
+            for (int y = 1; y <= this.WorldDim; y++) {
+                for(int i = 1; i <= this.WorldDim; i++) {
+                    for(int j = 1; j <= this.WorldDim; j++) {
+                        if (x != i && j != y) {
+                            solver.addClause(clauseBuilder.addClause(x, y, i, j));
+                        }
+                    }
+                }
             }
         }
         addClauses(vecs);
