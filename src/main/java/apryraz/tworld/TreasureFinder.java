@@ -5,7 +5,6 @@ import apryraz.tworld.data.*;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
-import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -294,14 +293,12 @@ public class TreasureFinder {
             } else if (value == 2) {
                 int[] vect = {en.getLiteralSensor2(x, y)};
                 solver.addClause(new VecInt(vect));
-                //TODO
             } else if (value == 3) {
                 int[] vect = {en.getLiteralSensor3(x, y)};
                 solver.addClause(new VecInt(vect));
             } else {
                 int[] vect = {en.getLiteralSensor0(x, y)};
                 solver.addClause(new VecInt(vect));
-                //TODO: quan el detector retorna 0
             }
         }
         // Call your function/functions to add the evidence clauses
@@ -328,6 +325,12 @@ public class TreasureFinder {
         return ans;
     }
 
+
+    /**
+     * Process the answer obtained for the query: "treasureup (x,y)?"
+     *
+     * @param ans answer given by the pirate
+     */
     public void processPirateAnswer(AMessage ans) throws
             IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
 
@@ -339,8 +342,6 @@ public class TreasureFinder {
         } else if (isup.equals("no")) {
             solver.addClause(addClauseDown(x, y));
         }
-        // CALL your functions HERE to update the solver object with more
-        // clauses
     }
 
     private VecInt addClauseDown(int x, int y) throws NotCorrectPositionException {
@@ -348,7 +349,7 @@ public class TreasureFinder {
         return new VecInt(vect);
     }
 
-    private IVecInt addClauseUp(int x, int y) throws NotCorrectPositionException {
+    private VecInt addClauseUp(int x, int y) throws NotCorrectPositionException {
         int[] vect = {en.getLiteralUp(x, y)};
         return new VecInt(vect);
     }
