@@ -69,7 +69,6 @@ class GammaBuilderTest {
                 for (int i = 0; i < WDIM; i++) {
                     for (int j = y + 1; j < WDIM; j++, v++) {
                         Position pNeg = en.linealToPosition(vecs.get(v).get(1));
-                        System.out.println("NEG: " + pNeg.toString());
                         assertEquals(en.newPosition(i+1, j+1), pNeg);
                     }
                 }

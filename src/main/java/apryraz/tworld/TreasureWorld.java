@@ -61,10 +61,11 @@ public class TreasureWorld {
      **/
     public static void main(String[] args) throws ParseFormatException,
             IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
-
-        // Here I run a concrete example, but you should read parameters from
-        // the command line, as decribed above.
-        runStepsSequence(4, 3, 3, 5, "tests/steps1.txt", "tests/pirates1.txt");
+        int wDim = Integer.parseInt(args[0]);
+        int tx = Integer.parseInt(args[1]);
+        int ty = Integer.parseInt(args[2]);
+        int numSteps = Integer.parseInt(args[3]);
+        runStepsSequence(wDim, tx, ty, numSteps, args[4], args[5]);
     }
 
 }
