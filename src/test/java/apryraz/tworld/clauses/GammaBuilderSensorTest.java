@@ -1,6 +1,7 @@
 package apryraz.tworld.clauses;
 
 import apryraz.tworld.data.LiteralEnumerator;
+import apryraz.tworld.data.NotCorrectPositionException;
 import apryraz.tworld.data.Position;
 import org.junit.jupiter.api.Test;
 import org.sat4j.core.VecInt;
@@ -21,7 +22,7 @@ public abstract class GammaBuilderSensorTest {
     int start;
 
     @Test
-    void addSensorClauseDown() throws ContradictionException {
+    void addSensorClauseDown() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensorClauseDown(limit, cb);
         for (VecInt vec : vecs) {
             Position p1 = en.linealToPosition(vec.get(0));
@@ -32,7 +33,7 @@ public abstract class GammaBuilderSensorTest {
     }
 
     @Test
-    void addSensorClauseUp() throws ContradictionException {
+    void addSensorClauseUp() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensorClauseUp(start, cb);
         for (VecInt vec : vecs) {
             Position p1 = en.linealToPosition(vec.get(0));
@@ -44,7 +45,7 @@ public abstract class GammaBuilderSensorTest {
     }
 
     @Test
-    void addSensorClauseLeft() throws ContradictionException {
+    void addSensorClauseLeft() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensorClauseLeft(limit, cb);
         vecs.forEach(a -> System.out.println(en.linealToPosition(a.get(0)).toString() + en.linealToPosition(a.get(1)).toString()));
         for (VecInt vec : vecs) {
@@ -56,7 +57,7 @@ public abstract class GammaBuilderSensorTest {
     }
 
     @Test
-    void addSensorClauseRight() throws ContradictionException {
+    void addSensorClauseRight() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensorClauseRight(start, cb);
         for (VecInt vec : vecs) {
             Position p1 = en.linealToPosition(vec.get(0));

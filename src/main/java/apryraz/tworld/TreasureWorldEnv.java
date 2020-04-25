@@ -1,6 +1,8 @@
 package apryraz.tworld;
 
 import apryraz.tworld.data.AMessage;
+import apryraz.tworld.data.LiteralEnumerator;
+import apryraz.tworld.data.NotCorrectPositionException;
 import apryraz.tworld.data.Position;
 
 import java.io.*;
@@ -14,6 +16,7 @@ public class TreasureWorldEnv {
      **/
     int TreasureX, TreasureY, WorldDim;
     List<Position> pirateLocations;
+    private LiteralEnumerator en;
 
 
     /**
@@ -24,10 +27,11 @@ public class TreasureWorldEnv {
      * @param ty          Y position of Treasure
      * @param piratesFile File with list of pirates locations
      **/
-    public TreasureWorldEnv(int dim, int tx, int ty, String piratesFile) throws IOException {
+    public TreasureWorldEnv(int dim, int tx, int ty, String piratesFile) throws IOException, NotCorrectPositionException {
         TreasureX = tx;
         TreasureY = ty;
         WorldDim = dim;
+        en = new LiteralEnumerator(dim);
         loadPiratesLocations(piratesFile);
     }
 
@@ -37,7 +41,7 @@ public class TreasureWorldEnv {
      * @param piratesFile: name of the file that should contain a
      * set of pirate locations in a single line.
      **/
-    public void loadPiratesLocations(String piratesFile) throws IOException {
+    public void loadPiratesLocations(String piratesFile) throws IOException, NotCorrectPositionException {
         BufferedReader reader = new BufferedReader(new FileReader(piratesFile));
         String line =reader.readLine();
         pirateLocations = new LinkedList<>();
@@ -46,12 +50,12 @@ public class TreasureWorldEnv {
         }
     }
 
-    protected void getPirateLocations(String line) {
+    protected void getPirateLocations(String line) throws NotCorrectPositionException {
         StringTokenizer strtok = new StringTokenizer(line, ", ");
         while (strtok.hasMoreTokens()) {
             int x = Integer.parseInt(strtok.nextToken());
             int y = Integer.parseInt(strtok.nextToken());
-            pirateLocations.add(new Position(x, y));
+            pirateLocations.add(en.newPosition(x, y));
         }
     }
 
@@ -64,7 +68,7 @@ public class TreasureWorldEnv {
      * @param msg message sent by the Agent
      * @return a msg with the answer to return to the agent
      **/
-    public AMessage acceptMessage(AMessage msg) {
+    public AMessage acceptMessage(AMessage msg) throws NotCorrectPositionException {
         AMessage ans = new AMessage("voidmsg", "", "", "");
 
         msg.showMessage();
@@ -116,9 +120,9 @@ public class TreasureWorldEnv {
      * @param y y coordinate of agent position
      * @return 1  if (x,y) contains a pirate, 0 otherwise
      **/
-    public int isPirateInMyCell(int x, int y) {
+    public int isPirateInMyCell(int x, int y) throws NotCorrectPositionException {
         for (Position position: pirateLocations) {
-            if( position.equals(new Position(x, y)))
+            if( position.equals(en.newPosition(x, y)))
                 return 1;
         }
         return 0;

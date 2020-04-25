@@ -2,6 +2,7 @@ package apryraz.tworld;
 
 import apryraz.tworld.data.AMessage;
 import apryraz.tworld.data.LiteralEnumerator;
+import apryraz.tworld.data.NotCorrectPositionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,7 @@ public class AcceptMessagesTest {
     LiteralEnumerator enumerator;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, NotCorrectPositionException {
         enumerator = new LiteralEnumerator(WorldDim);
         //tFinder = new TreasureFinder(WorldDim);
         tWorldEnv1 = new TreasureWorldEnv(WorldDim, TreasureX1, TreasureY1, "tests/pirates1.txt");
@@ -36,7 +37,7 @@ public class AcceptMessagesTest {
     }
 
     @Test
-    public void acceptDetectSat1Message() {
+    public void acceptDetectSat1Message() throws NotCorrectPositionException {
         AMessage msg = new AMessage("detectsat", String.valueOf(X), String.valueOf(Y), "");
         AMessage ansExpected = new AMessage("detectedsat", "3", "3", "3");
         AMessage ans = tWorldEnv1.acceptMessage(msg);
@@ -47,7 +48,7 @@ public class AcceptMessagesTest {
     }
 
     @Test
-    public void acceptDetectSat2Message() {
+    public void acceptDetectSat2Message() throws NotCorrectPositionException {
         AMessage msg = new AMessage("detectsat", String.valueOf(X), String.valueOf(Y), "");
         AMessage ansExpected = new AMessage("detectedsat", "3", "3", "3");
         AMessage ans = tWorldEnv2.acceptMessage(msg);
@@ -58,7 +59,7 @@ public class AcceptMessagesTest {
     }
 
     @Test
-    public void acceptDetectSat3Message() {
+    public void acceptDetectSat3Message() throws NotCorrectPositionException {
         AMessage msg = new AMessage("detectsat", String.valueOf(X), String.valueOf(Y), "");
         AMessage ansExpected = new AMessage("detectedsat", "3", "3", "3");
         AMessage ans = tWorldEnv3.acceptMessage(msg);
@@ -69,7 +70,7 @@ public class AcceptMessagesTest {
     }
     //TODO: s'ha d'acabar la part del 0
     @Test
-    public void acceptDetectSat0Message() {
+    public void acceptDetectSat0Message() throws NotCorrectPositionException {
         AMessage msg = new AMessage("detectsat", String.valueOf(X), String.valueOf(Y), "");
         AMessage ansExpected = new AMessage("detectedsat", "3", "3", "3");
         AMessage ans = tWorldEnv2.acceptMessage(msg);
@@ -80,7 +81,7 @@ public class AcceptMessagesTest {
     }
 
     @Test
-    public void acceptTreasureUp() {
+    public void acceptTreasureUp() throws NotCorrectPositionException {
         AMessage msg = new AMessage("treasureup", String.valueOf(X), String.valueOf(Y), "");
         AMessage ansExpected = new AMessage("yes", "3", "3", "");
         AMessage ans = tWorldEnv3.acceptMessage(msg);
@@ -91,7 +92,7 @@ public class AcceptMessagesTest {
     }
 
     @Test
-    public void acceptTreasureDown() {
+    public void acceptTreasureDown() throws NotCorrectPositionException {
         AMessage msg = new AMessage("treasureup", String.valueOf(X), String.valueOf(Y), "");
         AMessage ansExpected = new AMessage("no", "3", "3", "");
         AMessage ans = tWorldEnv1.acceptMessage(msg);

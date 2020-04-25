@@ -1,6 +1,7 @@
 package apryraz.tworld.clauses;
 
 import apryraz.tworld.data.LiteralEnumerator;
+import apryraz.tworld.data.NotCorrectPositionException;
 import apryraz.tworld.data.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addMemorableClauses() throws ContradictionException {
+    void addMemorableClauses() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addMemorableClauses();
         for (int i = 1; i <= WLINEALDIM; i++) {
             assertEquals(-i, vecs.get(i - 1).get(0));
@@ -39,17 +40,17 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addPirateUpClauses() throws ContradictionException {
+    void addPirateUpClauses() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addPirateUpClauses();
         int x = 0;
         for (int v = 0; v < vecs.size(); x++) {
             for (int y = 0; y < WDIM; y++) {
                 Position pUp = en.linealToPosition(vecs.get(v).get(0));
-                assertEquals(new Position(x, y), pUp);
+                assertEquals(en.newPosition(x+1, y+1), pUp);
                 for (int i = 0; i < WDIM; i++) {
                     for (int j = 0; j < (y + 1); j++, v++) {
                         Position pNeg = en.linealToPosition(vecs.get(v).get(1));
-                        assertEquals(new Position(i, j), pNeg);
+                        assertEquals(en.newPosition(i+1, j+1), pNeg);
                     }
                 }
             }
@@ -57,19 +58,19 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addPirateDownClauses() throws ContradictionException {
+    void addPirateDownClauses() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addPirateDownClauses();
         int x = 0;
         for (int v = 0; v < vecs.size(); x++) {
             for (int y = 0; y < WDIM - 1; y++) {
                 Position pDown = en.linealToPosition(vecs.get(v).get(0));
                 System.out.println("CURRENT: " + pDown.toString());
-                assertEquals(new Position(x, y), pDown);
+                assertEquals(en.newPosition(x+1, y+1), pDown);
                 for (int i = 0; i < WDIM; i++) {
                     for (int j = y + 1; j < WDIM; j++, v++) {
                         Position pNeg = en.linealToPosition(vecs.get(v).get(1));
                         System.out.println("NEG: " + pNeg.toString());
-                        assertEquals(new Position(i, j), pNeg);
+                        assertEquals(en.newPosition(i+1, j+1), pNeg);
                     }
                 }
             }
@@ -77,7 +78,7 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addSensor3ClauseSquare() throws ContradictionException {
+    void addSensor3ClauseSquare() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensor3ClauseSquare();
         for(VecInt vec: vecs) {
             Position p1 = en.linealToPosition(vec.get(0));
@@ -87,7 +88,7 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addSensor0ClauseSquare() throws ContradictionException {
+    void addSensor0ClauseSquare() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensor0ClauseSquare();
         for(VecInt vec: vecs) {
             Position p1 = en.linealToPosition(vec.get(0));
@@ -97,7 +98,7 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addSensor1Clause() throws ContradictionException {
+    void addSensor1Clause() throws ContradictionException, NotCorrectPositionException {
         ClauseBuilder builder = new Sensor0Builder(en);
         vecs = gammaBuilder.addSensor1Clause(builder);
         for(VecInt vec: vecs) {
@@ -112,7 +113,7 @@ class GammaBuilderTest {
     }
 
     @Test
-    void addSensor2ClauseSame() throws ContradictionException {
+    void addSensor2ClauseSame() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensor2ClauseSame();
         for(VecInt vec: vecs) {
             int l1 = vec.get(0);

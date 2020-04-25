@@ -2,6 +2,8 @@ package apryraz.tworld.data;
 
 import org.sat4j.core.VecInt;
 
+import java.security.InvalidParameterException;
+
 public class LiteralEnumerator {
 
     private final int WorldDim;
@@ -29,6 +31,16 @@ public class LiteralEnumerator {
         UP_OFFSET = 6 * WorldLinealDim;
         DOWN_OFFSET = 7 * WorldLinealDim;
 
+    }
+
+    void checkCorrectPosition(int x, int y) throws NotCorrectPositionException {
+        if (!(x > 0 && x <= WorldDim && y > 0 && y <= WorldDim))
+            throw new NotCorrectPositionException();
+    }
+
+    public Position newPosition(int x, int y) throws NotCorrectPositionException {
+        checkCorrectPosition(x, y);
+        return new Position(x, y);
     }
 
     public int getNumVars() {
@@ -65,16 +77,17 @@ public class LiteralEnumerator {
         int pos = (lineal - 1) % WorldLinealDim;
         int x = pos % this.WorldDim;
         int y = pos / this.WorldDim;
-        return new Position(x, y);
+        return new Position(x+1, y+1);
     }
 
-    public int getEnumeratePosition(int x, int y) {
+    public int getEnumeratePosition(int x, int y) throws NotCorrectPositionException {
         x = Math.abs(x);
         y = Math.abs(y);
-        return (y) * this.WorldDim + x + 1;
+        checkCorrectPosition(x, y);
+        return (x) + (y - 1) * this.WorldDim;
     }
 
-    public int getLiteralTPosition(int x, int y, int t) {
+    public int getLiteralTPosition(int x, int y, int t) throws NotCorrectPositionException {
         if (t == PAST) {
             return PAST_OFFSET + getEnumeratePosition(x, y);
         } else {
@@ -82,37 +95,37 @@ public class LiteralEnumerator {
         }
     }
 
-    public int getLiteralTPosition(VecInt vec, int t) {
+    public int getLiteralTPosition(VecInt vec, int t) throws NotCorrectPositionException {
         return this.getLiteralTPosition(Math.abs(vec.get(0)), Math.abs(vec.get(1)), t);
     }
 
-    public int getLiteralTPosition(Position position, int t) {
-        return getLiteralTPosition(position.getX() - 1, position.getY() - 1, t);
+    public int getLiteralTPosition(Position position, int t) throws NotCorrectPositionException {
+        return getLiteralTPosition(position.getX(), position.getY(), t);
     }
 
-    public int getLiteralDown(int x, int y) {
+    public int getLiteralDown(int x, int y) throws NotCorrectPositionException {
         return DOWN_OFFSET + getEnumeratePosition(x, y);
     }
 
 
-    public int getLiteralUp(int x, int y) {
+    public int getLiteralUp(int x, int y) throws NotCorrectPositionException {
         return UP_OFFSET + getEnumeratePosition(x, y);
     }
 
-    public int getLiteralSensor0(int x, int y) {
+    public int getLiteralSensor0(int x, int y) throws NotCorrectPositionException {
         return SENSOR0_OFFSET + getEnumeratePosition(x, y);
     }
 
-    public int getLiteralSensor3(int x, int y) {
+    public int getLiteralSensor3(int x, int y) throws NotCorrectPositionException {
         return SENSOR3_OFFSET + getEnumeratePosition(x, y);
     }
 
 
-    public int getLiteralSensor2(int x, int y) {
+    public int getLiteralSensor2(int x, int y) throws NotCorrectPositionException {
         return SENSOR2_OFFSET + getEnumeratePosition(x, y);
     }
 
-    public int getLiteralSensor1(int x, int y) {
+    public int getLiteralSensor1(int x, int y) throws NotCorrectPositionException {
         return SENSOR1_OFFSET + getEnumeratePosition(x, y);
     }
 

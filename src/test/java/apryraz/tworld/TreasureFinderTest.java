@@ -1,5 +1,6 @@
 package apryraz.tworld;
 
+import apryraz.tworld.data.NotCorrectPositionException;
 import apryraz.tworld.data.Position;
 import apryraz.tworld.data.TFState;
 import org.junit.jupiter.api.Test;
@@ -115,7 +116,7 @@ public class TreasureFinderTest {
     public void testMakeSeqOfSteps(int wDim, int tX, int tY,
                                    int numSteps, String fileSteps, String fileStates,
                                    String filePirates)
-            throws IOException, ContradictionException, TimeoutException {
+            throws IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
         // You should make TreasureFinder and TreasureWorldEnv objects to  test.
         // Then load sequence of target states, load sequence of steps into the bAgent
         // and then test the sequence calling testMakeSimpleStep once for each step.
@@ -148,7 +149,7 @@ public class TreasureFinderTest {
      **/
     @Test
     public void TWorldTest1() throws
-            IOException, ContradictionException, TimeoutException {
+            IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
         // Example test for 4x4 world , Treasure at 3,3 and 5 steps
         testMakeSeqOfSteps(4, 3, 3, 5, "tests/steps1.txt", "tests/states1.txt", "tests/pirates1.txt");
     }

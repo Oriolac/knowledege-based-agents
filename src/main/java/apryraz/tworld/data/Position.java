@@ -8,7 +8,7 @@ public class Position {
      **/
     private int x, y;
 
-    public Position(int a, int b) {
+    protected Position(int a, int b) {
         x = a;
         y = b;
     }

@@ -1,13 +1,11 @@
 package apryraz.tworld;
 
 import apryraz.tworld.clauses.GammaBuilder;
-import apryraz.tworld.data.AMessage;
-import apryraz.tworld.data.LiteralEnumerator;
-import apryraz.tworld.data.Position;
-import apryraz.tworld.data.TFState;
+import apryraz.tworld.data.*;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
+import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -78,7 +76,7 @@ public class TreasureFinder {
     int TreasurePastOffset;
     int TreasureFutureOffset;
     int DetectorOffset;
-    private LiteralEnumerator enumerator;
+    private LiteralEnumerator en;
 
 
     /**
@@ -88,11 +86,11 @@ public class TreasureFinder {
      *
      * @param WDim the dimension of the Treasure World
      **/
-    public TreasureFinder(int WDim) {
+    public TreasureFinder(int WDim) throws NotCorrectPositionException {
 
         WorldDim = WDim;
         WorldLinealDim = WorldDim * WorldDim;
-        enumerator = new LiteralEnumerator(WDim);
+        en = new LiteralEnumerator(WDim);
 
         try {
             solver = buildGamma();
@@ -131,7 +129,7 @@ public class TreasureFinder {
      * @param stepsFile the name of the text file with the line that contains
      *                  the sequence of steps: x1,y1 x2,y2 ...  xn,yn
      **/
-    public void loadListOfSteps(int numSteps, String stepsFile) {
+    public void loadListOfSteps(int numSteps, String stepsFile) throws NotCorrectPositionException {
         String[] stepsList;
         String steps = ""; // Prepare a list of movements to try with the FINDER Agent
         try {
@@ -150,7 +148,7 @@ public class TreasureFinder {
         listOfSteps = new ArrayList<Position>(numSteps);
         for (int i = 0; i < numSteps; i++) {
             String[] coords = stepsList[i].split(",");
-            listOfSteps.add(new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+            listOfSteps.add(en.newPosition(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
         }
         numMovements = listOfSteps.size(); // Initialization of numMovements
         idNextStep = 0;
@@ -173,7 +171,7 @@ public class TreasureFinder {
      * result of the logical inferences performed by the agent with its formula.
      **/
     public void runNextStep() throws
-            IOException, ContradictionException, TimeoutException {
+            IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
         pirateFound = 0;
         // Add the conclusions obtained in the previous step
         // but as clauses that use the "past" variables
@@ -207,7 +205,7 @@ public class TreasureFinder {
      * @return the answer message from the environment, that will tell whether the
      * movement was successful or not.
      **/
-    public AMessage moveToNext() {
+    public AMessage moveToNext() throws NotCorrectPositionException {
         Position nextPosition;
 
         if (idNextStep < numMovements) {
@@ -231,7 +229,7 @@ public class TreasureFinder {
      * @return returns the answer obtained from the environment object to the
      * moveto message sent
      **/
-    public AMessage moveTo(int x, int y) {
+    public AMessage moveTo(int x, int y) throws NotCorrectPositionException {
         // Tell the EnvironmentAgentID that we want  to move
         AMessage msg, ans;
 
@@ -248,11 +246,11 @@ public class TreasureFinder {
      *
      * @param moveans the answer given by the environment to the last move message
      **/
-    public void processMoveAnswer(AMessage moveans) {
+    public void processMoveAnswer(AMessage moveans) throws NotCorrectPositionException {
         if (moveans.getComp(0).equals("movedto")) {
             int x = Integer.parseInt(moveans.getComp(1));
             int y = Integer.parseInt(moveans.getComp(2));
-            currentPosition = new Position(x, y);
+            currentPosition = en.newPosition(x, y);
             pirateFound = Integer.parseInt(moveans.getComp(3));
             System.out.println("FINDER => moved to : (" + currentPosition.getX() + "," + currentPosition.getY() + ")" + " Pirate found : " + pirateFound);
         }
@@ -264,7 +262,7 @@ public class TreasureFinder {
      *
      * @return return the answer given by the environment
      **/
-    public AMessage DetectsAt() {
+    public AMessage DetectsAt() throws NotCorrectPositionException {
         AMessage msg, ans;
 
         msg = new AMessage("detectsat", String.valueOf(currentPosition.getX()),
@@ -283,21 +281,21 @@ public class TreasureFinder {
      *            It will a message with three fields: [0,1,2,3] x y
      **/
     public void processDetectorSensorAnswer(AMessage ans) throws
-            IOException, ContradictionException, TimeoutException {
+            IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
         int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
         int value = Integer.parseInt((ans.getComp(3)));
         String detects = ans.getComp(0);
         if (detects.equals("detectedsat")) {
             if (value == 1) {
-                int[] vect = {enumerator.getLiteralSensor1(x, y)};
+                int[] vect = {en.getLiteralSensor1(x, y)};
                 solver.addClause(new VecInt(vect));//TODO
             } else if (value == 2) {
-                int[] vect = {enumerator.getLiteralSensor2(x, y)};
+                int[] vect = {en.getLiteralSensor2(x, y)};
                 solver.addClause(new VecInt(vect));
                 //TODO
             } else if (value == 3) {
-                int[] vect = {enumerator.getLiteralSensor3(x, y)};
+                int[] vect = {en.getLiteralSensor3(x, y)};
                 solver.addClause(new VecInt(vect));
             } else {
                 //TODO: quan el detector retorna 0
@@ -317,7 +315,7 @@ public class TreasureFinder {
      *
      * @return return the answer given by the pirate
      **/
-    public AMessage isTreasureUpOrDown() {
+    public AMessage isTreasureUpOrDown() throws NotCorrectPositionException {
         AMessage msg, ans;
 
         msg = new AMessage("treasureup", String.valueOf(currentPosition.getX()),
@@ -328,26 +326,28 @@ public class TreasureFinder {
     }
 
     public void processPirateAnswer(AMessage ans) throws
-            IOException, ContradictionException, TimeoutException {
+            IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
 
         int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
         if (isup.equals("yes")) {
-            int[] vect = {enumerator.getLiteralUp(x, y)};
-            solver.addClause(new VecInt(vect));
+            solver.addClause(addClauseUp(x, y));
         } else if (isup.equals("no")) {
-            int[] vect = {enumerator.getLiteralDown(x, y)};
-            solver.addClause(new VecInt(vect));
+            solver.addClause(addClauseDown(x, y));
         }
-        // isup should be either "yes" (is up of agent position), or "no"
-
-        // Call your function/functions to add the evidence clauses
-        // to Gamma to then be able to infer new NOT possible positions
-
-
         // CALL your functions HERE to update the solver object with more
         // clauses
+    }
+
+    private VecInt addClauseDown(int x, int y) throws NotCorrectPositionException {
+        int[] vect = {en.getLiteralDown(x, y)};
+        return new VecInt(vect);
+    }
+
+    private IVecInt addClauseUp(int x, int y) throws NotCorrectPositionException {
+        int[] vect = {en.getLiteralUp(x, y)};
+        return new VecInt(vect);
     }
 
 
@@ -357,11 +357,11 @@ public class TreasureFinder {
      * Use the function addClause( VecInt ) to add each clause to the solver
      **/
     public void addLastFutureClausesToPastClauses() throws IOException,
-            ContradictionException, TimeoutException {
+            ContradictionException, TimeoutException, NotCorrectPositionException {
         if (futureToPast != null) {
             for (VecInt conc : futureToPast) {
-                Position notPossiblePosition = enumerator.linealToPosition(Math.abs(conc.get(0)));
-                int[] ints = new int[]{-enumerator.getLiteralTPosition(notPossiblePosition, LiteralEnumerator.PAST)};
+                Position notPossiblePosition = en.linealToPosition(Math.abs(conc.get(0)));
+                int[] ints = new int[]{-en.getLiteralTPosition(notPossiblePosition, LiteralEnumerator.PAST)};
                 VecInt vec = new VecInt(ints);
                 solver.addClause(vec);
             }
@@ -381,19 +381,19 @@ public class TreasureFinder {
      * any bad functioning in the reasoning process with the formula.
      **/
     public void performInferenceQuestions() throws IOException,
-            ContradictionException, TimeoutException {
+            ContradictionException, TimeoutException, NotCorrectPositionException {
         for (int i = 1; i <= WorldDim; i++) {
             for (int j = 1; j <= WorldDim; j++) {
-                Position p = new Position(i, j);
+                Position p = en.newPosition(i, j);
                 checkPosition(p);
             }
         }
 
     }
 
-    private void checkPosition(Position p) throws TimeoutException {
-        int linealIndex = enumerator.getLiteralTPosition(p, LiteralEnumerator.FUTURE);
-        int linealIndexPast = enumerator.getLiteralTPosition(p, LiteralEnumerator.PAST);
+    private void checkPosition(Position p) throws TimeoutException, NotCorrectPositionException {
+        int linealIndex = en.getLiteralTPosition(p, LiteralEnumerator.FUTURE);
+        int linealIndexPast = en.getLiteralTPosition(p, LiteralEnumerator.PAST);
 
         VecInt variablePositive = new VecInt();
         variablePositive.insertFirst(linealIndex);
@@ -418,8 +418,8 @@ public class TreasureFinder {
      * @return returns the solver object where the formula has been stored
      **/
     public ISolver buildGamma() throws UnsupportedEncodingException,
-            FileNotFoundException, IOException, ContradictionException {
-        GammaBuilder gammaBuilder = new GammaBuilder(enumerator);
+            FileNotFoundException, IOException, ContradictionException, NotCorrectPositionException {
+        GammaBuilder gammaBuilder = new GammaBuilder(en);
         // This variable is used to generate, in a particular sequential order,
         // the variable indentifiers of all the variables
         solver = gammaBuilder.buildSolver();

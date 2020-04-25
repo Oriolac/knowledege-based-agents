@@ -1,6 +1,7 @@
 package apryraz.tworld;
 
 
+import apryraz.tworld.data.NotCorrectPositionException;
 import apryraz.tworld.data.Position;
 import org.sat4j.reader.ParseFormatException;
 import org.sat4j.specs.ContradictionException;
@@ -30,7 +31,7 @@ public class TreasureWorld {
      **/
     public static void runStepsSequence(int wDim, int tX, int tY,
                                         int numSteps, String fileSteps, String filePirates) throws
-            IOException, ContradictionException, TimeoutException {
+            IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
         // Make instances of TreasureFinder agent and environment object classes
         TreasureFinder TAgent;
         TreasureWorldEnv EnvAgent;
@@ -59,7 +60,7 @@ public class TreasureWorld {
      * arg[5] = file name with list of pirate positions
      **/
     public static void main(String[] args) throws ParseFormatException,
-            IOException, ContradictionException, TimeoutException {
+            IOException, ContradictionException, TimeoutException, NotCorrectPositionException {
 
         // Here I run a concrete example, but you should read parameters from
         // the command line, as decribed above.

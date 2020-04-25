@@ -1,6 +1,7 @@
 package apryraz.tworld.clauses;
 
 import apryraz.tworld.data.LiteralEnumerator;
+import apryraz.tworld.data.NotCorrectPositionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sat4j.core.VecInt;
@@ -20,7 +21,7 @@ class Sensor2BuilderTest {
     }
 
     @Test
-    void addClause() {
+    void addClause() throws NotCorrectPositionException {
         VecInt vecint = sensorBuilder.addClause(1, 1, 1, 1);
         assertEquals(-enumerator.getLiteralSensor2(1, 1), vecint.get(0));
         assertEquals(-enumerator.getLiteralTPosition(1, 1, LiteralEnumerator.FUTURE), vecint.get(1));
