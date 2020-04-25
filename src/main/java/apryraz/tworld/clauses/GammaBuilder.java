@@ -49,7 +49,7 @@ public class GammaBuilder {
      * @return the solver builded
      * @throws ContradictionException
      */
-    public ISolver buildSolver() throws ContradictionException {
+    public ISolver buildSolver() throws ContradictionException, NotCorrectPositionException {
         addMemorableClauses();
         addSensorClauses();
         addPirateClauses();
@@ -105,7 +105,7 @@ public class GammaBuilder {
      * the value returned by the metal sensor is 3
      * @throws ContradictionException
      */
-    protected void addSensor3Clause() throws ContradictionException {
+    protected void addSensor3Clause() throws ContradictionException, NotCorrectPositionException {
         ClauseBuilder clauseBuilder = new Sensor3Builder(en);
         addSensorClauseDown(2, clauseBuilder);
         addSensorClauseUp(3, clauseBuilder);
