@@ -299,6 +299,8 @@ public class TreasureFinder {
                 int[] vect = {en.getLiteralSensor3(x, y)};
                 solver.addClause(new VecInt(vect));
             } else {
+                int[] vect = {en.getLiteralSensor0(x, y)};
+                solver.addClause(new VecInt(vect));
                 //TODO: quan el detector retorna 0
             }
         }
