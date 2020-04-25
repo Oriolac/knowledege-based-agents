@@ -67,7 +67,7 @@ public class TFState {
     }
 
     /**
-     * screen printing the state of the world
+     * print on the screen the state of the world
      */
     public void printState() {
         System.out.println("FINDER => Printing Treasure world matrix");
