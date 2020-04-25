@@ -4,6 +4,7 @@ import apryraz.tworld.data.TFState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class TFStateTest {
@@ -18,16 +19,14 @@ public class TFStateTest {
     }
 
     @Test
-    public void initializeState() {
+    public void testEquals() {
+        state = new TFState(wDim);
+        TFState state2 = new TFState(wDim);
+        state2.set(2,3, "X");
+        state.set(2,3, "X");
+        assertEquals(state, state2);
     }
 
-    @Test
-    public void set() {
-    }
-
-    @Test
-    public void testSet() {
-    }
 
     @Test
     public void testNotEquals() {
@@ -37,11 +36,6 @@ public class TFStateTest {
         state2 = new TFState(wDim);
         state2.set(2,3, "X");
         assertNotEquals(state, state2);
-    }
-
-    @Test
-    public void testEquals() {
-
     }
 
     @Test

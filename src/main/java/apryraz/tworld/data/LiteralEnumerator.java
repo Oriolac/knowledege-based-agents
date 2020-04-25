@@ -48,23 +48,6 @@ public class LiteralEnumerator {
     }
 
     /**
-     * Convert a coordinate pair (x,y) to the integer value  t_[x,y]
-     * of variable that stores that information in the formula, using
-     * offset as the initial index for that subset of position variables
-     * (past and future position variables have different variables, so different
-     * offset values)
-     *
-     * @param x      x coordinate of the position variable to encode
-     * @param y      y coordinate of the position variable to encode
-     * @param offset initial value for the subset of position variables
-     *               (past or future subset)
-     * @return the integer indentifer of the variable  b_[x,y] in the formula
-     **/
-    public int coordToLineal(int x, int y, int offset) {
-        return ((x - 1) * WorldDim) + (y - 1) + offset;
-    }
-
-    /**
      * Perform the inverse computation to the previous function.
      * That is, from the identifier t_[x,y] to the coordinates  (x,y)
      * that it represents

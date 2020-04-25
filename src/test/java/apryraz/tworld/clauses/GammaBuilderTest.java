@@ -91,10 +91,6 @@ class GammaBuilderTest {
     @Test
     void addSensor0ClauseSquare() throws ContradictionException, NotCorrectPositionException {
         vecs = gammaBuilder.addSensor0ClauseSquare();
-        vecs.forEach(System.out::println);
-        vecs.stream().map(a -> new Position[]{en.linealToPosition(a.get(0)), en.linealToPosition(a.get(1))}).forEach(
-                a -> System.out.println(a[0].toString() + "  " + a[1].toString())
-        );
         for(VecInt vec: vecs) {
             Position p1 = en.linealToPosition(vec.get(0));
             Position p2 = en.linealToPosition(vec.get(1));
