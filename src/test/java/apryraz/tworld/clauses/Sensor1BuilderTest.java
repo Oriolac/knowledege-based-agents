@@ -23,13 +23,13 @@ public class Sensor1BuilderTest {
 
     @Test
     public void addClause() throws NotCorrectPositionException {
-        VecInt vecint = sensorBuilder.addClause(1,1, 1, 1);
+        VecInt vecint = sensorBuilder.addClause(1,1, 4, 4);
         assertEquals(-enumerator.getLiteralSensor1(1,1),vecint.get(0));
-        assertEquals(-enumerator.getLiteralTPosition(1,1,LiteralEnumerator.FUTURE),vecint.get(1));
-        vecint = sensorBuilder.addClause(2,3, 2, 3);
+        assertEquals(-enumerator.getLiteralTPosition(4,4,LiteralEnumerator.FUTURE),vecint.get(1));
+        vecint = sensorBuilder.addClause(2,3, 3, 2);
         assertEquals(-enumerator.getLiteralSensor1(2,3),vecint.get(0));
-        assertEquals(-enumerator.getLiteralTPosition(2,3,LiteralEnumerator.FUTURE),vecint.get(1));
-        assertThrows(UnsupportedOperationException.class, () -> sensorBuilder.addClause(2,3, 3, 3));
+        assertEquals(-enumerator.getLiteralTPosition(3,2,LiteralEnumerator.FUTURE),vecint.get(1));
+        assertThrows(UnsupportedOperationException.class, () -> sensorBuilder.addClause(2,3, 2, 3));
 
     }
 
