@@ -10,6 +10,7 @@ import org.sat4j.specs.ISolver;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class GammaBuilder {
 
     private final LiteralEnumerator en;
@@ -81,10 +82,10 @@ public class GammaBuilder {
 
     protected List<VecInt> addPirateUpClauses() throws ContradictionException, NotCorrectPositionException {
         List<VecInt> vecs = new LinkedList<>();
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = 0; i < this.WorldDim; i++) {
-                    for (int j = 0; j <= y; j++) {
+        for (int x = 1; x <= this.WorldDim; x++) {
+            for (int y = 1; y <= this.WorldDim; y++) {
+                for (int i = 1; i <= this.WorldDim; i++) {
+                    for (int j = 1; j <= y; j++) {
                         int[] vect = {-en.getLiteralUp(x, y), -en.getLiteralTPosition(i, j, 1)};
                         vecs.add(new VecInt(vect));
                     }
@@ -97,10 +98,10 @@ public class GammaBuilder {
 
     protected List<VecInt> addPirateDownClauses() throws ContradictionException, NotCorrectPositionException {
         List<VecInt> vecs = new LinkedList<>();
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = 0; i < this.WorldDim; i++) {
-                    for (int j = y + 1; j < this.WorldDim; j++) {
+        for (int x = 1; x <= this.WorldDim; x++) {
+            for (int y = 1; y <= this.WorldDim; y++) {
+                for (int i = 1; i <= this.WorldDim; i++) {
+                    for (int j = y + 1; j <= this.WorldDim; j++) {
                         int[] vect = {-en.getLiteralDown(x, y), -en.getLiteralTPosition(i, j, 1)};
                         vecs.add(new VecInt(vect));
                     }
@@ -153,8 +154,8 @@ public class GammaBuilder {
 
     protected List<VecInt> addSensor1Clause(ClauseBuilder clauseBuilder) throws ContradictionException, NotCorrectPositionException {
         List<VecInt> vecs = new LinkedList<>();
-        for (int i = 0; i < this.WorldDim; i++) {
-            for (int j = 0; j < this.WorldDim; j++) {
+        for (int i = 1; i <= this.WorldDim; i++) {
+            for (int j = 1; j <= this.WorldDim; j++) {
                 vecs.add(clauseBuilder.addClause(i, j, i, j));
             }
         }
