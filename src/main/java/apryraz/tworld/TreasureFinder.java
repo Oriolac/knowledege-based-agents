@@ -287,6 +287,7 @@ public class TreasureFinder {
         int value = Integer.parseInt((ans.getComp(3)));
         String detects = ans.getComp(0);
         if (detects.equals("detectedsat")) {
+            System.out.println("FINDER => detected sensor: " + value);
             if (value == 1) {
                 int[] vect = {en.getLiteralSensor1(x, y)};
                 solver.addClause(new VecInt(vect));//TODO

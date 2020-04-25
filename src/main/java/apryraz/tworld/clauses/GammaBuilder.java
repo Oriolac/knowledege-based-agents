@@ -117,11 +117,11 @@ public class GammaBuilder {
 
     protected List<VecInt> addSensor3ClauseSquare() throws ContradictionException, NotCorrectPositionException {
         List<VecInt> vecs = new LinkedList<>();
-        for (int x = 0; x < this.WorldDim; x++) {
-            for (int y = 0; y < this.WorldDim; y++) {
-                for (int i = x - 1; i <= x + 1 && i < WorldDim; i++) {
-                    for (int j = y - 1; j <= y + 1 && j < WorldDim; j++) {
-                        if ((i >= 0 && j >= 0)) {
+        for (int x = 1; x <= this.WorldDim; x++) {
+            for (int y = 1; y <= this.WorldDim; y++) {
+                for (int i = x - 1; i <= x + 1 && i <= WorldDim; i++) {
+                    for (int j = y - 1; j <= y + 1 && j <= WorldDim; j++) {
+                        if ((i > 0 && j > 0)) {
                             int[] vect = {-en.getLiteralSensor3(x, y), -en.getLiteralTPosition(i, j, LiteralEnumerator.FUTURE)};
                             vecs.add(new VecInt(vect));
                         }
