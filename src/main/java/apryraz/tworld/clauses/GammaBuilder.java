@@ -158,8 +158,8 @@ public class GammaBuilder {
             for (int y = 1; y <= this.WorldDim; y++) {
                 for(int i = 1; i <= this.WorldDim; i++) {
                     for(int j = 1; j <= this.WorldDim; j++) {
-                        if (x != i && j != y) {
-                            solver.addClause(clauseBuilder.addClause(x, y, i, j));
+                        if (!(x == i && j == y)) {
+                            vecs.add(clauseBuilder.addClause(x, y, i, j));
                         }
                     }
                 }

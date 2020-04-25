@@ -12,6 +12,7 @@ import org.sat4j.specs.ISolver;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GammaBuilderTest {
@@ -99,16 +100,17 @@ class GammaBuilderTest {
 
     @Test
     void addSensor1Clause() throws ContradictionException, NotCorrectPositionException {
-        ClauseBuilder builder = new Sensor0Builder(en);
+        ClauseBuilder builder = new Sensor1Builder(en);
         vecs = gammaBuilder.addSensor1Clause(builder);
+        assertEquals(WLINEALDIM * (WLINEALDIM - 1), vecs.size());
         for(VecInt vec: vecs) {
             int l1 = vec.get(0);
             int l2 = vec.get(1);
             Position p1 = en.linealToPosition(l1);
             Position p2 = en.linealToPosition(l2);
-            assertEquals(p1, p2);
+            assertNotEquals(p1, p2);
             assertTrue(l1 < 0);
-            assertTrue(l2 > 0);
+            assertTrue(l2 < 0);
         }
     }
 
